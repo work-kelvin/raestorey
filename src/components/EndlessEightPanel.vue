@@ -16,7 +16,6 @@ const { tracks, currentIndex, isPlaying, playTrack, togglePlayback } = useAudioP
     <div class="endless-eight__table">
       <div class="endless-eight__header">
         <span>Song</span>
-        <span>Album</span>
         <span>Artist</span>
       </div>
 
@@ -35,7 +34,6 @@ const { tracks, currentIndex, isPlaying, playTrack, togglePlayback } = useAudioP
               <span class="endless-eight__mark">{{ index === currentIndex && isPlaying ? '▶' : '▷' }}</span>
               {{ track.title }}
             </span>
-            <span class="endless-eight__album">{{ track.album }}</span>
             <span class="endless-eight__artist">{{ track.artist }}</span>
           </button>
         </li>

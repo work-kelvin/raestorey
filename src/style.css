@@ -241,8 +241,8 @@ em {
 .endless-eight__header,
 .endless-eight__track {
   display: grid;
-  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr) minmax(0, 1fr);
-  column-gap: 12px;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  column-gap: 16px;
   align-items: baseline;
   text-align: left;
 }
@@ -278,7 +278,6 @@ em {
   min-width: 0;
 }
 
-.endless-eight__album,
 .endless-eight__artist {
   min-width: 0;
   overflow: hidden;
