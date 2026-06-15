@@ -234,55 +234,36 @@ em {
   text-decoration: underline;
 }
 
-.endless-eight__table {
-  margin-bottom: 32px;
-}
-
-.endless-eight__header,
-.endless-eight__track {
-  display: grid;
-  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
-  column-gap: 16px;
-  align-items: baseline;
-  text-align: left;
-}
-
-.endless-eight__header {
-  margin-bottom: 8px;
-  color: var(--text-faded);
-  font-weight: var(--weight-regular);
-  line-height: var(--line);
-}
-
-.endless-eight__header span:last-child,
-.endless-eight__artist {
-  text-align: right;
-}
-
 .endless-eight__list {
   list-style: none;
-  margin: 0;
+  margin: 0 0 32px;
   padding: 0;
 }
 
 .endless-eight__track {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  column-gap: 2rem;
+  align-items: start;
   width: 100%;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
+  padding: 0;
   color: var(--text-faded);
   line-height: var(--line);
 }
 
 .endless-eight__song {
   display: flex;
-  gap: 4px;
+  gap: 6px;
+  align-items: flex-start;
   min-width: 0;
+  text-align: left;
 }
 
 .endless-eight__artist {
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  text-align: right;
+  line-height: var(--line);
+  word-break: break-word;
 }
 
 .endless-eight__track.is-active,
@@ -290,8 +271,7 @@ em {
   color: var(--active);
 }
 
-.endless-eight__track.is-active .endless-eight__song,
-.endless-eight__track.is-playing .endless-eight__song {
+.endless-eight__track.is-active .endless-eight__song {
   font-weight: var(--weight-medium);
 }
 
@@ -301,7 +281,7 @@ em {
 
 .endless-eight__mark {
   flex-shrink: 0;
-  width: 1em;
+  line-height: var(--line);
 }
 
 .endless-eight__note {

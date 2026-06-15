@@ -13,32 +13,31 @@ const { tracks, currentIndex, isPlaying, playTrack, togglePlayback } = useAudioP
       {{ isPlaying ? 'Pause' : 'Play' }}
     </button>
 
-    <div class="endless-eight__table">
-      <div class="endless-eight__header">
-        <span>Song</span>
-        <span>Artist</span>
-      </div>
-
-      <ul class="endless-eight__list">
-        <li v-for="(track, index) in tracks" :key="track.id">
-          <button
-            type="button"
-            class="endless-eight__track"
-            :class="{
-              'is-active': index === currentIndex,
-              'is-playing': isPlaying && index === currentIndex,
-            }"
-            @click="playTrack(index)"
-          >
-            <span class="endless-eight__song">
-              <span class="endless-eight__mark">{{ index === currentIndex && isPlaying ? '▶' : '▷' }}</span>
-              {{ track.title }}
+    <ul class="endless-eight__list">
+      <li v-for="(track, index) in tracks" :key="track.id">
+        <button
+          type="button"
+          class="endless-eight__track"
+          :class="{
+            'is-active': index === currentIndex,
+            'is-playing': isPlaying && index === currentIndex,
+          }"
+          @click="playTrack(index)"
+        >
+          <span class="endless-eight__song">
+            <span
+              v-if="index === currentIndex"
+              class="endless-eight__mark"
+              aria-hidden="true"
+            >
+              {{ isPlaying ? '▶' : '▷' }}
             </span>
-            <span class="endless-eight__artist">{{ track.artist }}</span>
-          </button>
-        </li>
-      </ul>
-    </div>
+            {{ track.title }}
+          </span>
+          <span class="endless-eight__artist">{{ track.artist }}</span>
+        </button>
+      </li>
+    </ul>
 
     <p class="endless-eight__note">
       <em>{{ endlessEight.recreatedNote }}</em>
