@@ -1,14 +1,22 @@
 <script setup>
+import { computed } from 'vue'
 import { useAudioPlayer } from '../composables/useAudioPlayer'
 
 const { currentTrack, isPlaying, togglePlayback } = useAudioPlayer()
+
+const subtitle = computed(() => {
+  if (!currentTrack.value) return ''
+  const { album, artist } = currentTrack.value
+  if (album && artist?.trim()) return `${album} · ${artist}`
+  return album || artist || ''
+})
 </script>
 
 <template>
   <div v-if="currentTrack" class="mobile-player">
     <div class="mobile-player__info">
       <p class="mobile-player__title">{{ currentTrack.title }}</p>
-      <p class="mobile-player__sub">{{ currentTrack.subtitle }}</p>
+      <p class="mobile-player__sub">{{ subtitle }}</p>
     </div>
     <button type="button" class="mobile-player__toggle" @click="togglePlayback">
       {{ isPlaying ? 'Pause' : 'Play' }}
