@@ -221,19 +221,18 @@ em {
 .ee-overlay {
   position: fixed;
   z-index: 100;
-  width: min(22rem, calc(100vw - var(--page-margin-left) * 2));
-  padding: 10px 14px 14px;
+  padding: 10px 12px;
   background: rgba(245, 245, 245, 0.94);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-radius: 14px;
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
   user-select: none;
+  overflow: hidden;
 }
 
 .ee-overlay--collapsed {
-  width: auto;
-  padding: 10px 14px;
+  padding: 0;
 }
 
 .ee-overlay--dragging {
@@ -241,23 +240,15 @@ em {
   touch-action: none;
 }
 
-.ee-overlay__chrome {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  min-height: 18px;
-  margin: -4px -4px 6px;
-  padding: 4px;
-  cursor: grab;
-}
-
-.ee-overlay--collapsed .ee-overlay__chrome {
-  min-height: 8px;
-  margin-bottom: 0;
+.ee-overlay--resizing {
+  touch-action: none;
 }
 
 .ee-overlay__reset {
-  margin-left: auto;
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  z-index: 2;
   padding: 2px 4px;
   line-height: 1;
   color: var(--text-muted);
@@ -268,15 +259,15 @@ em {
   color: var(--active);
 }
 
-.ee-overlay__play {
-  text-decoration: underline;
-  color: var(--active);
-  cursor: pointer;
-}
-
-.ee-overlay__now-playing {
-  margin-bottom: 12px;
+.ee-overlay__content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  height: 100%;
+  padding-right: 28px;
+  padding-bottom: 28px;
   cursor: grab;
+  overflow: hidden;
 }
 
 .ee-overlay__song {
@@ -284,71 +275,100 @@ em {
   font-weight: var(--weight-bold);
   color: var(--active);
   line-height: var(--line);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .ee-overlay__artist {
   margin: 0;
   color: var(--text-muted);
   line-height: var(--line);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.ee-overlay__list {
-  list-style: none;
-  margin: 0 0 12px;
-  padding: 0;
-  max-height: min(40vh, 280px);
-  overflow-y: auto;
-}
-
-.ee-overlay__track {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  column-gap: 1.5rem;
-  align-items: start;
-  width: 100%;
-  margin-bottom: 6px;
-  padding: 0;
+.ee-overlay__marquee {
+  margin-top: auto;
+  overflow: hidden;
+  white-space: nowrap;
   color: var(--text-faded);
   line-height: var(--line);
-  cursor: pointer;
 }
 
-.ee-overlay__track-song {
+.ee-overlay__marquee-track {
+  display: inline-flex;
+  width: max-content;
+  animation: ee-marquee 12s linear infinite;
+}
+
+.ee-overlay__marquee-text {
+  display: inline-block;
+  padding-right: 2rem;
+}
+
+@keyframes ee-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.ee-overlay__transport {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  z-index: 2;
   display: flex;
-  gap: 6px;
-  align-items: flex-start;
-  min-width: 0;
-  text-align: left;
-}
-
-.ee-overlay__track-artist {
-  text-align: right;
-  line-height: var(--line);
-  word-break: break-word;
-}
-
-.ee-overlay__track.is-active,
-.ee-overlay__track.is-playing {
-  color: var(--active);
-}
-
-.ee-overlay__track.is-active .ee-overlay__track-song {
-  font-weight: var(--weight-medium);
-}
-
-.ee-overlay__track:hover {
-  color: var(--active);
-}
-
-.ee-overlay__mark {
-  flex-shrink: 0;
-  line-height: var(--line);
-}
-
-.ee-overlay__toggle {
-  text-decoration: underline;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
   color: var(--active);
   cursor: pointer;
+}
+
+.ee-overlay__icon {
+  width: 18px;
+  height: 18px;
+}
+
+.ee-overlay__resize {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  z-index: 3;
+}
+
+.ee-overlay__resize--nw {
+  top: 0;
+  left: 0;
+  cursor: nwse-resize;
+}
+
+.ee-overlay__resize--ne {
+  top: 0;
+  right: 0;
+  cursor: nesw-resize;
+}
+
+.ee-overlay__resize--sw {
+  bottom: 0;
+  left: 0;
+  cursor: nesw-resize;
+}
+
+.ee-overlay__resize--se {
+  bottom: 0;
+  right: 0;
+  cursor: nwse-resize;
+}
+
+.ee-overlay--collapsed .ee-overlay__resize {
+  display: none;
 }
 
 /* Main content */
@@ -665,9 +685,5 @@ em {
 
   .merch-grid {
     grid-template-columns: 1fr;
-  }
-
-  .ee-overlay {
-    width: min(20rem, calc(100vw - var(--page-margin-left) * 2));
   }
 }
