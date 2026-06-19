@@ -61,6 +61,7 @@
   --content-indent: calc(var(--section-number-width) + var(--section-number-gap));
 
   --ee-overlay-bottom: 40px;
+  --ee-transport-size: 77px;
 
   --font: 'Monument Grotesk', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   --size: 13px;
@@ -228,13 +229,16 @@ em {
   border-radius: 14px;
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
   user-select: none;
+  transform-origin: bottom left;
+  transition: box-shadow 0.08s ease-out;
+}
+
+.ee-overlay--pulsing {
+  transition: transform 0.08s ease-out, box-shadow 0.08s ease-out;
 }
 
 .ee-overlay--collapsed {
   padding: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .ee-overlay--dragging {
@@ -265,10 +269,10 @@ em {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  height: 100%;
+  height: calc(100% - var(--ee-transport-size) - 8px);
   padding-top: 20px;
-  padding-right: 8px;
-  padding-bottom: 96px;
+  padding-right: 4px;
+  padding-bottom: 4px;
   cursor: grab;
   overflow: hidden;
 }
@@ -293,24 +297,26 @@ em {
 }
 
 .ee-overlay__marquee {
-  flex-shrink: 0;
+  flex: 1;
+  min-width: 0;
   overflow: hidden;
   white-space: nowrap;
   color: var(--text-faded);
   line-height: var(--line);
+  padding-right: 8px;
 }
 
 .ee-overlay__marquee-track {
   display: inline-flex;
   width: max-content;
-  animation: ee-marquee 18s linear infinite;
+  animation: ee-marquee 20s linear infinite;
 }
 
 .ee-overlay__marquee-text {
   display: inline-block;
   padding-right: 5rem;
-  letter-spacing: 0.04em;
-  word-spacing: 0.2em;
+  letter-spacing: 0.06em;
+  word-spacing: 0.35em;
 }
 
 @keyframes ee-marquee {
@@ -378,29 +384,38 @@ em {
   line-height: var(--line);
 }
 
-.ee-overlay__transport {
+.ee-overlay__footer {
   position: absolute;
+  left: 12px;
   right: 6px;
   bottom: 6px;
-  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: var(--ee-transport-size);
+}
+
+.ee-overlay__footer--solo {
+  left: 0;
+  right: 0;
+  bottom: 0;
+  justify-content: center;
+}
+
+.ee-overlay__transport {
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 90px;
-  height: 90px;
+  width: var(--ee-transport-size);
+  height: var(--ee-transport-size);
   color: var(--active);
   cursor: pointer;
 }
 
-.ee-overlay--collapsed .ee-overlay__transport {
-  position: static;
-  width: 100%;
-  height: 100%;
-}
-
 .ee-overlay__icon {
-  width: 90px;
-  height: 90px;
+  width: var(--ee-transport-size);
+  height: var(--ee-transport-size);
 }
 
 .ee-overlay__resize {

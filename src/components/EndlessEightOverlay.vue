@@ -3,7 +3,9 @@ import { ref, computed, onMounted, onBeforeUnmount, nextTick } from 'vue'
 import { useAudioPlayer } from '../composables/useAudioPlayer'
 import { endlessEight } from '../data/endlessEight'
 
-const { tracks, currentIndex, currentTrack, isPlaying, playTrack, togglePlayback } =
+const TRANSPORT_SIZE = 77
+
+const { tracks, currentIndex, currentTrack, isPlaying, audioLevel, playTrack, togglePlayback } =
   useAudioPlayer()
 
 const overlayRef = ref(null)
@@ -11,8 +13,8 @@ const overlayRef = ref(null)
 const hasExpanded = ref(false)
 const posX = ref(0)
 const posY = ref(0)
-const width = ref(104)
-const height = ref(104)
+const width = ref(TRANSPORT_SIZE)
+const height = ref(TRANSPORT_SIZE)
 
 const isDragging = ref(false)
 const isResizing = ref(false)
@@ -28,16 +30,23 @@ let resizeOriginH = 0
 
 const MIN_WIDTH = 200
 const MIN_HEIGHT = 200
-const COLLAPSED_SIZE = 104
+const COLLAPSED_SIZE = TRANSPORT_SIZE
 const EXPANDED_WIDTH = 300
-const EXPANDED_HEIGHT = 380
+const EXPANDED_HEIGHT = 400
 
-const overlayStyle = computed(() => ({
-  left: `${posX.value}px`,
-  top: `${posY.value}px`,
-  width: `${width.value}px`,
-  height: `${height.value}px`,
-}))
+const overlayStyle = computed(() => {
+  const pulse = isPlaying.value ? 1 + audioLevel.value * 0.06 : 1
+  const glow = isPlaying.value ? audioLevel.value * 0.22 : 0
+
+  return {
+    left: `${posX.value}px`,
+    top: `${posY.value}px`,
+    width: `${width.value}px`,
+    height: `${height.value}px`,
+    transform: `scale(${pulse})`,
+    boxShadow: `0 4px 24px rgba(0, 0, 0, ${0.1 + glow})`,
+  }
+})
 
 function readPageMargins() {
   const root = getComputedStyle(document.documentElement)
@@ -196,6 +205,7 @@ onBeforeUnmount(() => {
       'ee-overlay--collapsed': !hasExpanded,
       'ee-overlay--dragging': isDragging,
       'ee-overlay--resizing': isResizing,
+      'ee-overlay--pulsing': isPlaying,
     }"
     :style="overlayStyle"
     aria-label="Endless Eight"
@@ -216,18 +226,6 @@ onBeforeUnmount(() => {
       <div class="ee-overlay__now-playing">
         <p class="ee-overlay__song">{{ currentTrack?.title }}</p>
         <p class="ee-overlay__artist">{{ currentTrack?.artist }}</p>
-      </div>
-
-      <div class="ee-overlay__marquee" aria-hidden="true">
-        <div class="ee-overlay__marquee-track">
-          <span
-            v-for="n in 2"
-            :key="n"
-            class="ee-overlay__marquee-text"
-          >
-            {{ endlessEight.marqueeText }}
-          </span>
-        </div>
       </div>
 
       <ul class="ee-overlay__list">
@@ -258,30 +256,47 @@ onBeforeUnmount(() => {
       </ul>
     </div>
 
-    <button
-      type="button"
-      class="ee-overlay__transport"
-      :aria-label="isPlaying ? 'Pause' : 'Play'"
-      @click.stop="handleTransport"
-      @pointerdown.stop
+    <div
+      class="ee-overlay__footer"
+      :class="{ 'ee-overlay__footer--solo': !hasExpanded }"
     >
-      <svg
-        v-if="!isPlaying"
-        class="ee-overlay__icon"
-        viewBox="0 0 24 24"
-        aria-hidden="true"
+      <div v-if="hasExpanded" class="ee-overlay__marquee" aria-hidden="true">
+        <div class="ee-overlay__marquee-track">
+          <span
+            v-for="n in 2"
+            :key="n"
+            class="ee-overlay__marquee-text"
+          >
+            {{ endlessEight.marqueeText }}
+          </span>
+        </div>
+      </div>
+
+      <button
+        type="button"
+        class="ee-overlay__transport"
+        :aria-label="isPlaying ? 'Pause' : 'Play'"
+        @click.stop="handleTransport"
+        @pointerdown.stop
       >
-        <path d="M8 5v14l11-7z" fill="currentColor" />
-      </svg>
-      <svg
-        v-else
-        class="ee-overlay__icon"
-        viewBox="0 0 24 24"
-        aria-hidden="true"
-      >
-        <path d="M6 5h4v14H6zm8 0h4v14h-4z" fill="currentColor" />
-      </svg>
-    </button>
+        <svg
+          v-if="!isPlaying"
+          class="ee-overlay__icon"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+          <path d="M8 5v14l11-7z" fill="currentColor" />
+        </svg>
+        <svg
+          v-else
+          class="ee-overlay__icon"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+          <path d="M6 5h4v14H6zm8 0h4v14h-4z" fill="currentColor" />
+        </svg>
+      </button>
+    </div>
 
     <div
       v-for="corner in ['nw', 'ne', 'sw', 'se']"
