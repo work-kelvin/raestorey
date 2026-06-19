@@ -2,9 +2,8 @@
 import { ref, computed, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import SiteNav from '../components/SiteNav.vue'
-import EndlessEightPanel from '../components/EndlessEightPanel.vue'
+import EndlessEightOverlay from '../components/EndlessEightOverlay.vue'
 import MainContent from '../components/MainContent.vue'
-import MobilePlayerBar from '../components/MobilePlayerBar.vue'
 import { sectionIds } from '../data/sections'
 import { endlessEight } from '../data/endlessEight'
 import { initPlaylist } from '../composables/useAudioPlayer'
@@ -40,14 +39,12 @@ function scrollToHash() {
       <SiteNav :active-id="activeId" @navigate="scrollToSection" />
     </div>
 
-    <div class="site-layout__void">
-      <EndlessEightPanel />
-    </div>
+    <div class="site-layout__void" aria-hidden="true" />
 
     <main ref="scrollRoot" class="site-layout__content">
       <MainContent />
     </main>
 
-    <MobilePlayerBar />
+    <EndlessEightOverlay />
   </div>
 </template>
