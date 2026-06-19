@@ -222,7 +222,6 @@ em {
 .ee-overlay {
   position: fixed;
   z-index: 100;
-  padding: 12px 14px;
   background: rgba(245, 245, 245, 0.94);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
@@ -231,6 +230,8 @@ em {
   user-select: none;
   transform-origin: bottom left;
   transition: box-shadow 0.08s ease-out;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .ee-overlay--pulsing {
@@ -239,6 +240,16 @@ em {
 
 .ee-overlay--collapsed {
   padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ee-overlay--expanded {
+  display: flex;
+  flex-direction: column;
+  padding: 12px 14px 10px;
+  box-sizing: border-box;
 }
 
 .ee-overlay--dragging {
@@ -269,10 +280,10 @@ em {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  height: calc(100% - var(--ee-transport-size) - 8px);
-  padding-top: 20px;
-  padding-right: 4px;
-  padding-bottom: 4px;
+  flex: 1;
+  min-height: 0;
+  padding-top: 16px;
+  padding-right: 2px;
   cursor: grab;
   overflow: hidden;
 }
@@ -299,16 +310,20 @@ em {
 .ee-overlay__marquee {
   flex: 1;
   min-width: 0;
-  overflow: hidden;
-  white-space: nowrap;
+  overflow-x: hidden;
+  overflow-y: visible;
+  display: flex;
+  align-items: center;
+  height: var(--line);
   color: var(--text-faded);
   line-height: var(--line);
-  padding-right: 8px;
 }
 
 .ee-overlay__marquee-track {
   display: inline-flex;
+  align-items: center;
   width: max-content;
+  line-height: var(--line);
   animation: ee-marquee 20s linear infinite;
 }
 
@@ -385,20 +400,19 @@ em {
 }
 
 .ee-overlay__footer {
-  position: absolute;
-  left: 12px;
-  right: 6px;
-  bottom: 6px;
+  flex-shrink: 0;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
+  width: 100%;
   height: var(--ee-transport-size);
+  margin-top: 6px;
 }
 
 .ee-overlay__footer--solo {
-  left: 0;
-  right: 0;
-  bottom: 0;
+  position: absolute;
+  inset: 0;
+  margin: 0;
   justify-content: center;
 }
 
