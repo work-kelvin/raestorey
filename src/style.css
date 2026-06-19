@@ -248,7 +248,7 @@ em {
 .ee-overlay--expanded {
   display: flex;
   flex-direction: column;
-  padding: 12px 14px 10px;
+  padding: 12px 14px 0;
   box-sizing: border-box;
 }
 
@@ -284,6 +284,7 @@ em {
   min-height: 0;
   padding-top: 16px;
   padding-right: 2px;
+  padding-bottom: calc(var(--ee-transport-size) + 10px);
   cursor: grab;
   overflow: hidden;
 }
@@ -332,6 +333,7 @@ em {
   padding-right: 5rem;
   letter-spacing: 0.06em;
   word-spacing: 0.35em;
+  text-shadow: 0 0 8px rgba(245, 245, 245, 0.95), 0 0 4px rgba(245, 245, 245, 0.95);
 }
 
 @keyframes ee-marquee {
@@ -346,7 +348,7 @@ em {
 .ee-overlay__list {
   list-style: none;
   margin: 0;
-  padding: 0;
+  padding: 0 0 calc(var(--ee-transport-size) + 8px);
   flex: 1;
   min-height: 0;
   overflow-y: auto;
@@ -400,20 +402,32 @@ em {
 }
 
 .ee-overlay__footer {
-  flex-shrink: 0;
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  bottom: 10px;
+  z-index: 3;
   display: flex;
   align-items: center;
   gap: 10px;
-  width: 100%;
+  width: auto;
   height: var(--ee-transport-size);
-  margin-top: 6px;
+  margin: 0;
+  background: transparent;
+  pointer-events: none;
 }
 
 .ee-overlay__footer--solo {
-  position: absolute;
-  inset: 0;
-  margin: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   justify-content: center;
+  pointer-events: auto;
+}
+
+.ee-overlay__marquee,
+.ee-overlay__transport {
+  pointer-events: auto;
 }
 
 .ee-overlay__transport {
