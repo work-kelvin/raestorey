@@ -1,24 +1,10 @@
 /* Typography */
 
 @font-face {
-  font-family: 'EK Notice Decor';
-  src: url('/font/EKNoticeDecorTest-Regular.ttf') format('truetype');
-  font-weight: normal;
+  font-family: 'Geist';
+  src: url('/font/Geist-Medium.otf') format('opentype');
+  font-weight: 500;
   font-style: normal;
-}
-
-@font-face {
-  font-family: 'PP Editorial New';
-  src: url('/font/PPEditorialNew-Regular.otf') format('opentype');
-  font-weight: normal;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'PP Editorial New';
-  src: url('/font/PPEditorialNew-Italic.otf') format('opentype');
-  font-weight: normal;
-  font-style: italic;
 }
 
 @font-face {
@@ -68,8 +54,8 @@
   --ee-overlay-bottom: 40px;
   --ee-transport-size: 77px;
 
-  --font-title: 'EK Notice Decor', Georgia, serif;
-  --font-header: 'PP Editorial New', Georgia, serif;
+  --font-title: 'Geist', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-header: 'Times New Roman', Times, serif;
   --font-body: 'Times Now', 'Times New Roman', Times, serif;
   --size: 13px;
   --line: 16px;
@@ -182,7 +168,8 @@ img {
   width: var(--col-nav);
   height: 100vh;
   padding: var(--page-margin-top) 0 var(--page-margin-top) var(--page-margin-left);
-  overflow-y: auto;
+  overflow: visible;
+  z-index: 2;
 }
 
 .site-layout__void {
@@ -208,16 +195,21 @@ img {
 
 .site-nav {
   width: var(--nav-width);
-  max-width: 100%;
+  max-width: none;
 }
 
 .site-nav__name {
   display: block;
+  position: relative;
+  z-index: 3;
+  width: max-content;
+  max-width: none;
   margin: 0 0 24px;
   font-family: var(--font-title);
   font-size: clamp(3rem, 5vw, 4rem);
-  font-weight: var(--weight-regular);
-  line-height: 1.1;
+  font-weight: var(--weight-medium);
+  line-height: 1;
+  white-space: nowrap;
   color: var(--active);
   text-decoration: none;
 }
@@ -538,7 +530,7 @@ img {
 
 .content-section__number {
   font-family: var(--font-header);
-  font-weight: var(--weight-regular);
+  font-weight: var(--weight-medium);
   color: var(--active);
   line-height: var(--line);
 }
@@ -553,7 +545,7 @@ img {
 .content-section__meta-type {
   margin: 0;
   font-family: var(--font-header);
-  font-weight: var(--weight-regular);
+  font-weight: var(--weight-medium);
   color: var(--active);
   line-height: var(--line);
 }
