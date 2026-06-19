@@ -3,8 +3,6 @@ import InformationBlock from './InformationBlock.vue'
 import FeaturedMixSection from './FeaturedMixSection.vue'
 import ReferencesSection from './ReferencesSection.vue'
 import WrittenWorkSection from './WrittenWorkSection.vue'
-import ProjectsSection from './ProjectsSection.vue'
-import MerchSection from './MerchSection.vue'
 </script>
 
 <template>
@@ -13,7 +11,5 @@ import MerchSection from './MerchSection.vue'
     <FeaturedMixSection />
     <ReferencesSection />
     <WrittenWorkSection />
-    <ProjectsSection />
-    <MerchSection />
   </div>
 </template>

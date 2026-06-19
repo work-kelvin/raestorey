@@ -65,9 +65,6 @@ function onNavigate(event, id) {
       >
         Archives
       </RouterLink>
-      <p class="site-nav__archives-note">
-        <em>For archived endless eights + references</em>
-      </p>
     </div>
   </nav>
 </template>

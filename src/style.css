@@ -215,7 +215,7 @@ img {
   display: block;
   margin: 0 0 24px;
   font-family: var(--font-title);
-  font-size: clamp(1.5rem, 2.5vw, 2rem);
+  font-size: clamp(3rem, 5vw, 4rem);
   font-weight: var(--weight-regular);
   line-height: 1.1;
   color: var(--active);
@@ -238,9 +238,11 @@ img {
   text-underline-offset: 2px;
 }
 
-.site-nav__link.is-active {
+.site-nav__link.is-active,
+.site-nav__link.is-active:hover {
   font-weight: var(--weight-medium);
   color: var(--active);
+  text-decoration: none;
 }
 
 .site-nav__link--disabled {
@@ -251,12 +253,6 @@ img {
 
 .site-nav__archives {
   margin-top: 32px;
-}
-
-.site-nav__archives-note {
-  margin: 4px 0 0;
-  color: var(--text-muted);
-  font-size: var(--size);
 }
 
 /* Endless Eight — floating overlay */
