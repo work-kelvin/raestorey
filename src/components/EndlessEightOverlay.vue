@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted, onBeforeUnmount, nextTick } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount, nextTick, inject } from 'vue'
 import { useAudioPlayer } from '../composables/useAudioPlayer'
 import { endlessEight } from '../data/endlessEight'
 
@@ -7,6 +7,8 @@ const TRANSPORT_SIZE = 77
 
 const { tracks, currentIndex, currentTrack, isPlaying, playTrack, togglePlayback } =
   useAudioPlayer()
+
+const siteRevealed = inject('siteRevealed', ref(true))
 
 const overlayRef = ref(null)
 
@@ -191,6 +193,7 @@ onBeforeUnmount(() => {
 
 <template>
   <aside
+    v-if="siteRevealed"
     ref="overlayRef"
     class="ee-overlay"
     :class="{

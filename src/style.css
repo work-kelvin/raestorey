@@ -1,35 +1,40 @@
-/* L384-inspired editorial base — customize later */
+/* Typography */
 
 @font-face {
-  font-family: 'Monument Grotesk';
-  src: url('/font/MonumentGrotesk-Regular.woff2') format('woff2'),
-    url('/font/MonumentGrotesk-Regular.woff') format('woff');
+  font-family: 'EK Notice Decor';
+  src: url('/font/EKNoticeDecorTest-Regular.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
-  font-family: 'Monument Grotesk';
-  src: url('/font/MonumentGrotesk-Italic.woff2') format('woff2'),
-    url('/font/MonumentGrotesk-Italic.woff') format('woff');
+  font-family: 'PP Editorial New';
+  src: url('/font/PPEditorialNew-Regular.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'PP Editorial New';
+  src: url('/font/PPEditorialNew-Italic.otf') format('opentype');
   font-weight: normal;
   font-style: italic;
 }
 
 @font-face {
-  font-family: 'Monument Grotesk';
-  src: url('/font/MonumentGrotesk-Medium.woff2') format('woff2'),
-    url('/font/MonumentGrotesk-Medium.woff') format('woff');
-  font-weight: 500;
+  font-family: 'Times Now';
+  src: url('/font/TimesNow-Regular.otf') format('opentype'),
+    url('/font/TimesNow-Regular.ttf') format('truetype');
+  font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
-  font-family: 'Monument Grotesk';
-  src: url('/font/MonumentGrotesk-Bold.woff2') format('woff2'),
-    url('/font/MonumentGrotesk-Bold.woff') format('woff');
-  font-weight: bold;
-  font-style: normal;
+  font-family: 'Times Now';
+  src: url('/font/TimesNow-Italic.otf') format('opentype'),
+    url('/font/TimesNow-Italic.ttf') format('truetype');
+  font-weight: normal;
+  font-style: italic;
 }
 
 :root {
@@ -63,7 +68,9 @@
   --ee-overlay-bottom: 40px;
   --ee-transport-size: 77px;
 
-  --font: 'Monument Grotesk', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-title: 'EK Notice Decor', Georgia, serif;
+  --font-header: 'PP Editorial New', Georgia, serif;
+  --font-body: 'Times Now', 'Times New Roman', Times, serif;
   --size: 13px;
   --line: 16px;
   --weight-regular: 400;
@@ -85,7 +92,7 @@ body,
 }
 
 body {
-  font-family: var(--font);
+  font-family: var(--font-body);
   font-style: normal;
   font-weight: var(--weight-regular);
   font-size: var(--size);
@@ -94,6 +101,46 @@ body {
   background: var(--bg);
   -webkit-font-smoothing: antialiased;
   overflow: hidden;
+}
+
+em {
+  font-family: inherit;
+  font-style: italic;
+}
+
+/* Site intro */
+
+.site-intro {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: #000000;
+}
+
+.site-intro__play {
+  position: fixed;
+  left: var(--page-margin-left);
+  bottom: var(--ee-overlay-bottom);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--ee-transport-size);
+  height: var(--ee-transport-size);
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.site-intro__icon {
+  width: var(--ee-transport-size);
+  height: var(--ee-transport-size);
+}
+
+.site-intro-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.site-intro-leave-to {
+  opacity: 0;
 }
 
 button {
@@ -116,10 +163,6 @@ img {
   display: block;
   max-width: 100%;
   height: auto;
-}
-
-em {
-  font-style: italic;
 }
 
 /* Layout */
@@ -171,9 +214,10 @@ em {
 .site-nav__name {
   display: block;
   margin: 0 0 24px;
-  font-size: var(--size);
-  font-weight: var(--weight-bold);
-  line-height: var(--line);
+  font-family: var(--font-title);
+  font-size: clamp(1.5rem, 2.5vw, 2rem);
+  font-weight: var(--weight-regular);
+  line-height: 1.1;
   color: var(--active);
   text-decoration: none;
 }
@@ -197,8 +241,6 @@ em {
 .site-nav__link.is-active {
   font-weight: var(--weight-medium);
   color: var(--active);
-  text-decoration: underline;
-  text-underline-offset: 2px;
 }
 
 .site-nav__link--disabled {
@@ -499,7 +541,8 @@ em {
 }
 
 .content-section__number {
-  font-weight: var(--weight-bold);
+  font-family: var(--font-header);
+  font-weight: var(--weight-regular);
   color: var(--active);
   line-height: var(--line);
 }
@@ -513,7 +556,8 @@ em {
 .content-section__meta-title,
 .content-section__meta-type {
   margin: 0;
-  font-weight: var(--weight-bold);
+  font-family: var(--font-header);
+  font-weight: var(--weight-regular);
   color: var(--active);
   line-height: var(--line);
 }
