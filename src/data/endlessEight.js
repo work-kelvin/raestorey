@@ -4,6 +4,7 @@ function trackUrl(filename) {
 
 export const endlessEight = {
   title: 'Endless Eight',
+  marqueeText: 'Endless Eight · updates monthly ·',
   recreatedNote: ' ',
   description: ' ',
   tracks: [

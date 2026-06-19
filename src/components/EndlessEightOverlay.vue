@@ -3,15 +3,16 @@ import { ref, computed, onMounted, onBeforeUnmount, nextTick } from 'vue'
 import { useAudioPlayer } from '../composables/useAudioPlayer'
 import { endlessEight } from '../data/endlessEight'
 
-const { currentIndex, currentTrack, isPlaying, playTrack, togglePlayback } = useAudioPlayer()
+const { tracks, currentIndex, currentTrack, isPlaying, playTrack, togglePlayback } =
+  useAudioPlayer()
 
 const overlayRef = ref(null)
 
 const hasExpanded = ref(false)
 const posX = ref(0)
 const posY = ref(0)
-const width = ref(48)
-const height = ref(48)
+const width = ref(104)
+const height = ref(104)
 
 const isDragging = ref(false)
 const isResizing = ref(false)
@@ -25,11 +26,11 @@ let resizeOriginY = 0
 let resizeOriginW = 0
 let resizeOriginH = 0
 
-const MIN_WIDTH = 120
-const MIN_HEIGHT = 48
-const COLLAPSED_SIZE = 48
-const EXPANDED_WIDTH = 260
-const EXPANDED_HEIGHT = 96
+const MIN_WIDTH = 200
+const MIN_HEIGHT = 200
+const COLLAPSED_SIZE = 104
+const EXPANDED_WIDTH = 300
+const EXPANDED_HEIGHT = 380
 
 const overlayStyle = computed(() => ({
   left: `${posX.value}px`,
@@ -72,11 +73,17 @@ function applyDefaultState() {
 }
 
 function resetOverlay() {
+  hasExpanded.value = false
   applyDefaultState()
 }
 
 function handleTransport() {
   if (!hasExpanded.value) {
+    if (isPlaying.value) {
+      togglePlayback()
+      return
+    }
+
     hasExpanded.value = true
     const defaults = getDefaultPosition()
     width.value = defaults.width
@@ -198,7 +205,7 @@ onBeforeUnmount(() => {
       v-if="hasExpanded"
       type="button"
       class="ee-overlay__reset"
-      aria-label="Reset position and size"
+      aria-label="Collapse player"
       @click.stop="resetOverlay"
       @pointerdown.stop
     >
@@ -206,8 +213,10 @@ onBeforeUnmount(() => {
     </button>
 
     <div v-if="hasExpanded" class="ee-overlay__content">
-      <p class="ee-overlay__song">{{ currentTrack?.title }}</p>
-      <p class="ee-overlay__artist">{{ currentTrack?.artist }}</p>
+      <div class="ee-overlay__now-playing">
+        <p class="ee-overlay__song">{{ currentTrack?.title }}</p>
+        <p class="ee-overlay__artist">{{ currentTrack?.artist }}</p>
+      </div>
 
       <div class="ee-overlay__marquee" aria-hidden="true">
         <div class="ee-overlay__marquee-track">
@@ -216,21 +225,48 @@ onBeforeUnmount(() => {
             :key="n"
             class="ee-overlay__marquee-text"
           >
-            {{ endlessEight.title }}&nbsp;&nbsp;·&nbsp;&nbsp;
+            {{ endlessEight.marqueeText }}
           </span>
         </div>
       </div>
+
+      <ul class="ee-overlay__list">
+        <li v-for="(track, index) in tracks" :key="track.id">
+          <button
+            type="button"
+            class="ee-overlay__track"
+            :class="{
+              'is-active': index === currentIndex,
+              'is-playing': isPlaying && index === currentIndex,
+            }"
+            @click.stop="playTrack(index)"
+            @pointerdown.stop
+          >
+            <span class="ee-overlay__track-song">
+              <span
+                v-if="index === currentIndex"
+                class="ee-overlay__mark"
+                aria-hidden="true"
+              >
+                {{ isPlaying ? '▶' : '▷' }}
+              </span>
+              {{ track.title }}
+            </span>
+            <span class="ee-overlay__track-artist">{{ track.artist }}</span>
+          </button>
+        </li>
+      </ul>
     </div>
 
     <button
       type="button"
       class="ee-overlay__transport"
-      :aria-label="hasExpanded && isPlaying ? 'Pause' : 'Play'"
+      :aria-label="isPlaying ? 'Pause' : 'Play'"
       @click.stop="handleTransport"
       @pointerdown.stop
     >
       <svg
-        v-if="!hasExpanded || !isPlaying"
+        v-if="!isPlaying"
         class="ee-overlay__icon"
         viewBox="0 0 24 24"
         aria-hidden="true"
