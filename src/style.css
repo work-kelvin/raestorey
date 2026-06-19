@@ -228,14 +228,8 @@ em {
   border-radius: 14px;
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
   user-select: none;
-  transform-origin: bottom left;
-  transition: box-shadow 0.08s ease-out;
   box-sizing: border-box;
   overflow: hidden;
-}
-
-.ee-overlay--pulsing {
-  transition: transform 0.08s ease-out, box-shadow 0.08s ease-out;
 }
 
 .ee-overlay--collapsed {
@@ -311,13 +305,13 @@ em {
 .ee-overlay__marquee {
   flex: 1;
   min-width: 0;
-  overflow-x: hidden;
-  overflow-y: visible;
+  overflow: hidden;
   display: flex;
   align-items: center;
   height: var(--line);
-  color: var(--text-faded);
+  color: var(--text-muted);
   line-height: var(--line);
+  white-space: nowrap;
 }
 
 .ee-overlay__marquee-track {
@@ -325,15 +319,19 @@ em {
   align-items: center;
   width: max-content;
   line-height: var(--line);
+  white-space: nowrap;
   animation: ee-marquee 20s linear infinite;
 }
 
 .ee-overlay__marquee-text {
   display: inline-block;
-  padding-right: 5rem;
-  letter-spacing: 0.06em;
-  word-spacing: 0.35em;
-  text-shadow: 0 0 8px rgba(245, 245, 245, 0.95), 0 0 4px rgba(245, 245, 245, 0.95);
+  flex-shrink: 0;
+  padding-right: 4rem;
+  white-space: nowrap;
+}
+
+.ee-overlay__marquee-em {
+  font-style: italic;
 }
 
 @keyframes ee-marquee {

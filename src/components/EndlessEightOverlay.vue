@@ -5,7 +5,7 @@ import { endlessEight } from '../data/endlessEight'
 
 const TRANSPORT_SIZE = 77
 
-const { tracks, currentIndex, currentTrack, isPlaying, audioLevel, playTrack, togglePlayback } =
+const { tracks, currentIndex, currentTrack, isPlaying, playTrack, togglePlayback } =
   useAudioPlayer()
 
 const overlayRef = ref(null)
@@ -34,19 +34,12 @@ const COLLAPSED_SIZE = TRANSPORT_SIZE
 const EXPANDED_WIDTH = 300
 const EXPANDED_HEIGHT = 400
 
-const overlayStyle = computed(() => {
-  const pulse = isPlaying.value ? 1 + audioLevel.value * 0.06 : 1
-  const glow = isPlaying.value ? audioLevel.value * 0.22 : 0
-
-  return {
-    left: `${posX.value}px`,
-    top: `${posY.value}px`,
-    width: `${width.value}px`,
-    height: `${height.value}px`,
-    transform: `scale(${pulse})`,
-    boxShadow: `0 4px 24px rgba(0, 0, 0, ${0.1 + glow})`,
-  }
-})
+const overlayStyle = computed(() => ({
+  left: `${posX.value}px`,
+  top: `${posY.value}px`,
+  width: `${width.value}px`,
+  height: `${height.value}px`,
+}))
 
 function readPageMargins() {
   const root = getComputedStyle(document.documentElement)
@@ -205,7 +198,6 @@ onBeforeUnmount(() => {
       'ee-overlay--collapsed': !hasExpanded,
       'ee-overlay--dragging': isDragging,
       'ee-overlay--resizing': isResizing,
-      'ee-overlay--pulsing': isPlaying,
     }"
     :style="overlayStyle"
     aria-label="Endless Eight"
@@ -260,14 +252,14 @@ onBeforeUnmount(() => {
       class="ee-overlay__footer"
       :class="{ 'ee-overlay__footer--solo': !hasExpanded }"
     >
-      <div v-if="hasExpanded" class="ee-overlay__marquee" aria-hidden="true">
+      <div v-if="hasExpanded" class="ee-overlay__marquee">
         <div class="ee-overlay__marquee-track">
           <span
             v-for="n in 2"
             :key="n"
             class="ee-overlay__marquee-text"
           >
-            {{ endlessEight.marqueeText }}
+            {{ endlessEight.marquee.lead }}<em class="ee-overlay__marquee-em">{{ endlessEight.marquee.emphasis }}</em>{{ endlessEight.marquee.tail }}
           </span>
         </div>
       </div>

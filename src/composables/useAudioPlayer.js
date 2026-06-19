@@ -5,13 +5,8 @@ const currentIndex = ref(0)
 const isPlaying = ref(false)
 const currentTime = ref(0)
 const duration = ref(0)
-const audioLevel = ref(0)
 
 let audio = null
-let audioContext = null
-let analyser = null
-let sourceNode = null
-let pulseFrame = null
 
 function ensureAudio() {
   if (!audio) {
@@ -27,61 +22,10 @@ function ensureAudio() {
         playTrack(currentIndex.value + 1)
       } else {
         isPlaying.value = false
-        stopPulseLoop()
       }
     })
   }
   return audio
-}
-
-function ensureAnalyser() {
-  const player = ensureAudio()
-  if (analyser) return analyser
-
-  audioContext = new AudioContext()
-  sourceNode = audioContext.createMediaElementSource(player)
-  analyser = audioContext.createAnalyser()
-  analyser.fftSize = 256
-  analyser.smoothingTimeConstant = 0.75
-  sourceNode.connect(analyser)
-  analyser.connect(audioContext.destination)
-  return analyser
-}
-
-function startPulseLoop() {
-  stopPulseLoop()
-  const node = ensureAnalyser()
-  const bins = new Uint8Array(node.frequencyBinCount)
-
-  const tick = () => {
-    if (!isPlaying.value) {
-      audioLevel.value = 0
-      return
-    }
-
-    node.getByteFrequencyData(bins)
-    let sum = 0
-    const bassBins = Math.min(12, bins.length)
-    for (let i = 0; i < bassBins; i += 1) {
-      sum += bins[i]
-    }
-    audioLevel.value = sum / (bassBins * 255)
-    pulseFrame = requestAnimationFrame(tick)
-  }
-
-  if (audioContext?.state === 'suspended') {
-    audioContext.resume()
-  }
-
-  pulseFrame = requestAnimationFrame(tick)
-}
-
-function stopPulseLoop() {
-  if (pulseFrame) {
-    cancelAnimationFrame(pulseFrame)
-    pulseFrame = null
-  }
-  audioLevel.value = 0
 }
 
 function loadTrack(index) {
@@ -112,11 +56,9 @@ export function playTrack(index) {
     .play()
     .then(() => {
       isPlaying.value = true
-      startPulseLoop()
     })
     .catch(() => {
       isPlaying.value = false
-      stopPulseLoop()
     })
 }
 
@@ -130,17 +72,14 @@ export function togglePlayback() {
   if (isPlaying.value) {
     player.pause()
     isPlaying.value = false
-    stopPulseLoop()
   } else {
     player
       .play()
       .then(() => {
         isPlaying.value = true
-        startPulseLoop()
       })
       .catch(() => {
         isPlaying.value = false
-        stopPulseLoop()
       })
   }
 }
@@ -170,7 +109,6 @@ export function useAudioPlayer() {
     currentTime,
     duration,
     progress,
-    audioLevel,
     playTrack,
     togglePlayback,
     playTrackById,
