@@ -31,6 +31,7 @@ function onCarouselIndex(index) {
     <SectionHeader number="02" title="References" type="Selection" />
 
     <ImageCarousel
+      v-if="carouselItems.length"
       ref="carousel"
       :items="carouselItems"
       @update:index="onCarouselIndex"
@@ -47,7 +48,7 @@ function onCarouselIndex(index) {
       </div>
     </div>
 
-    <ul class="references-index">
+    <ul v-if="references.items.length" class="references-index">
       <li v-for="(item, index) in references.items" :key="item.id">
         <button
           type="button"

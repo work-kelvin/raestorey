@@ -49,22 +49,12 @@ function onNavigate(event, id) {
       >
         {{ section.number }}.
         <template v-if="section.id === 'mix-01'">
-          {{ section.label }} <em>{{ featuredMix.title }}</em>
+          {{ section.label }}<template v-if="featuredMix.title"> <em>{{ featuredMix.title }}</em></template>
         </template>
         <template v-else>
           {{ section.label }}
         </template>
       </a>
     </template>
-
-    <div class="site-nav__archives">
-      <RouterLink
-        to="/archives"
-        class="site-nav__link"
-        :class="{ 'is-active': activeId === 'archives' }"
-      >
-        Archives
-      </RouterLink>
-    </div>
   </nav>
 </template>

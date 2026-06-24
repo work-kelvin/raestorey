@@ -14,7 +14,9 @@ function onReveal() {
       aria-label="Play to enter"
       @click="onReveal"
     >
-      <span class="site-intro__mark" aria-hidden="true">▷</span>
+      <svg class="site-intro__icon" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M8 5v14l11-7z" fill="currentColor" />
+      </svg>
     </button>
   </div>
 </template>
