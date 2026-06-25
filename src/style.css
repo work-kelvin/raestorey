@@ -1,26 +1,56 @@
 /* Typography */
 
 @font-face {
-  font-family: 'Geist';
-  src: url('/font/Geist-Medium.otf') format('opentype');
+  font-family: 'Gangster SN';
+  src: url('/font/GangsterSN-Book.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Gangster SN';
+  src: url('/font/GangsterSN-BookItalic.otf') format('opentype');
+  font-weight: 400;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Gangster SN';
+  src: url('/font/GangsterSN-Medium.otf') format('opentype');
   font-weight: 500;
   font-style: normal;
 }
 
 @font-face {
-  font-family: 'Times Now';
-  src: url('/font/TimesNow-Regular.otf') format('opentype'),
-    url('/font/TimesNow-Regular.ttf') format('truetype');
-  font-weight: normal;
+  font-family: 'Monument Grotesk';
+  src: url('/font/MonumentGrotesk-Regular.woff2') format('woff2'),
+    url('/font/MonumentGrotesk-Regular.woff') format('woff');
+  font-weight: 400;
   font-style: normal;
 }
 
 @font-face {
-  font-family: 'Times Now';
-  src: url('/font/TimesNow-Italic.otf') format('opentype'),
-    url('/font/TimesNow-Italic.ttf') format('truetype');
-  font-weight: normal;
+  font-family: 'Monument Grotesk';
+  src: url('/font/MonumentGrotesk-Italic.woff2') format('woff2'),
+    url('/font/MonumentGrotesk-Italic.woff') format('woff');
+  font-weight: 400;
   font-style: italic;
+}
+
+@font-face {
+  font-family: 'Monument Grotesk';
+  src: url('/font/MonumentGrotesk-Medium.woff2') format('woff2'),
+    url('/font/MonumentGrotesk-Medium.woff') format('woff');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Monument Grotesk';
+  src: url('/font/MonumentGrotesk-Bold.woff2') format('woff2'),
+    url('/font/MonumentGrotesk-Bold.woff') format('woff');
+  font-weight: 700;
+  font-style: normal;
 }
 
 :root {
@@ -34,11 +64,11 @@
   --wip: #fff9c4;
 
   --page-margin-left: 70px;
+  --page-margin-right: 48px;
   --page-margin-top: 70px;
   --col-nav: 20vw;
   --col-void: 38vw;
   --col-content: 42vw;
-  --nav-width: 11rem;
 
   --space-line: 16px;
   --space-meta: 0;
@@ -54,9 +84,9 @@
   --ee-overlay-bottom: 40px;
   --ee-transport-size: 77px;
 
-  --font-title: 'Geist', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  --font-header: 'Times New Roman', Times, serif;
-  --font-body: 'Times Now', 'Times New Roman', Times, serif;
+  --font-display: 'Gangster SN', Georgia, 'Times New Roman', serif;
+  --font-sans: 'Monument Grotesk', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-body: var(--font-sans);
   --size: 13px;
   --line: 16px;
   --weight-regular: 400;
@@ -92,6 +122,10 @@ body {
 em {
   font-family: inherit;
   font-style: italic;
+}
+
+.site-nav__link em {
+  font-family: var(--font-display);
 }
 
 /* Site intro */
@@ -155,8 +189,9 @@ img {
 
 .site-layout {
   display: grid;
-  grid-template-columns: var(--col-nav) var(--col-void) var(--col-content);
-  width: 100vw;
+  grid-template-columns: var(--col-nav) var(--col-void) minmax(0, var(--col-content));
+  width: 100%;
+  max-width: 100vw;
   height: 100vh;
   overflow: hidden;
 }
@@ -165,24 +200,28 @@ img {
   position: sticky;
   top: 0;
   align-self: start;
-  width: var(--col-nav);
+  width: 100%;
+  min-width: 0;
   height: 100vh;
-  padding: var(--page-margin-top) 0 var(--page-margin-top) var(--page-margin-left);
+  padding: var(--page-margin-top) var(--page-margin-right) var(--page-margin-top)
+    var(--page-margin-left);
   overflow: visible;
   z-index: 2;
 }
 
 .site-layout__void {
   position: relative;
-  width: var(--col-void);
+  width: 100%;
+  min-width: 0;
   height: 100vh;
   overflow: hidden;
 }
 
 .site-layout__content {
-  width: var(--col-content);
+  width: 100%;
+  min-width: 0;
   height: 100vh;
-  padding: var(--page-margin-top) 40px var(--page-margin-top) 0;
+  padding: var(--page-margin-top) var(--page-margin-right) var(--page-margin-top) 0;
   overflow-y: auto;
   scroll-behavior: smooth;
 }
@@ -194,22 +233,18 @@ img {
 /* Left nav */
 
 .site-nav {
-  width: var(--nav-width);
-  max-width: none;
+  width: 100%;
+  max-width: 100%;
 }
 
 .site-nav__name {
   display: block;
-  position: relative;
-  z-index: 3;
-  width: max-content;
-  max-width: none;
-  margin: 0 0 24px;
-  font-family: var(--font-title);
-  font-size: clamp(3rem, 5vw, 4rem);
-  font-weight: var(--weight-medium);
-  line-height: 1;
-  white-space: nowrap;
+  margin: 0 0 32px;
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 3.6vw, 3.5rem);
+  font-weight: var(--weight-regular);
+  line-height: 0.95;
+  letter-spacing: -0.01em;
   color: var(--active);
   text-decoration: none;
 }
@@ -218,6 +253,7 @@ img {
   display: block;
   width: 100%;
   margin: 0 0 var(--space-line);
+  font-family: var(--font-sans);
   font-weight: var(--weight-regular);
   color: var(--text-muted);
   line-height: var(--line);
@@ -313,7 +349,8 @@ img {
 
 .ee-overlay__song {
   margin: 0;
-  font-weight: var(--weight-bold);
+  font-family: var(--font-display);
+  font-weight: var(--weight-regular);
   color: var(--active);
   line-height: var(--line);
   word-break: break-word;
@@ -544,6 +581,7 @@ img {
 
 .main-content {
   width: 100%;
+  max-width: 100%;
 }
 
 .content-section {
@@ -554,20 +592,22 @@ img {
   display: grid;
   grid-template-columns: var(--section-number-width) minmax(0, 1fr) minmax(0, 1fr);
   column-gap: var(--section-number-gap);
-  align-items: start;
+  align-items: baseline;
   margin-bottom: var(--space-header-body);
   color: var(--text-muted);
 }
 
 .content-section__number {
-  font-family: var(--font-header);
+  font-family: var(--font-sans);
   font-weight: var(--weight-medium);
+  font-variant-numeric: tabular-nums;
   color: var(--active);
   line-height: var(--line);
 }
 
 .content-section__meta-col p {
   margin: 0;
+  font-family: var(--font-sans);
   line-height: var(--line);
   font-weight: var(--weight-regular);
 }
@@ -575,14 +615,13 @@ img {
 .content-section__meta-title,
 .content-section__meta-type {
   margin: 0;
-  font-family: var(--font-header);
-  font-weight: var(--weight-medium);
+  font-family: var(--font-display);
+  font-weight: var(--weight-regular);
   color: var(--active);
   line-height: var(--line);
 }
 
 .content-section__meta-col:last-child {
-  padding-left: calc(var(--section-meta-gap) - var(--section-number-gap));
   text-align: right;
 }
 
@@ -673,27 +712,41 @@ img {
 
 .reference-detail {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  column-gap: var(--section-meta-gap);
+  grid-template-columns: var(--section-number-width) minmax(0, 1fr) minmax(0, 1fr);
+  column-gap: var(--section-number-gap);
+  align-items: baseline;
   margin-top: var(--space-header-body);
-  padding-left: var(--content-indent);
   color: var(--text-muted);
 }
 
 .reference-detail__col p {
   margin: 0;
+  font-family: var(--font-sans);
   line-height: var(--line);
 }
 
-.reference-detail__title,
-.reference-detail__type {
+.reference-detail__title {
   margin: 0;
-  font-weight: var(--weight-bold);
+  font-family: var(--font-display);
+  font-weight: var(--weight-regular);
   color: var(--active);
   line-height: var(--line);
 }
 
+.reference-detail__type {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-weight: var(--weight-medium);
+  color: var(--active);
+  line-height: var(--line);
+}
+
+.reference-detail__col:first-child {
+  grid-column: 2;
+}
+
 .reference-detail__col:last-child {
+  grid-column: 3;
   text-align: right;
 }
 
@@ -782,9 +835,10 @@ img {
 
 .prose p {
   margin: 0 0 var(--space-paragraph);
+  font-family: var(--font-sans);
   font-weight: var(--weight-regular);
   color: var(--active);
-  line-height: var(--line);
+  line-height: calc(var(--line) * 1.25);
 }
 
 .prose p:last-child {
@@ -808,6 +862,7 @@ img {
 @media (max-width: 900px) {
   :root {
     --page-margin-left: 24px;
+    --page-margin-right: 24px;
     --page-margin-top: 24px;
     --space-paragraph: 24px;
     --space-header-body: 24px;
@@ -834,7 +889,8 @@ img {
     width: 100%;
     height: auto;
     max-height: 35vh;
-    padding: var(--page-margin-top) var(--page-margin-left);
+    padding: var(--page-margin-top) var(--page-margin-right) var(--page-margin-top)
+      var(--page-margin-left);
     border-bottom: 1px solid var(--border);
   }
 
