@@ -21,7 +21,5 @@ import FigureGallery from './FigureGallery.vue'
     </div>
 
     <FigureGallery :figures="featuredMix.figures" :title="featuredMix.title" />
-
-    <hr class="content-section__rule" />
   </section>
 </template>

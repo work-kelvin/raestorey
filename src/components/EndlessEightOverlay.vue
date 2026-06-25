@@ -15,8 +15,8 @@ const overlayRef = ref(null)
 const hasExpanded = ref(false)
 const posX = ref(0)
 const posY = ref(0)
-const width = ref(TRANSPORT_SIZE)
-const height = ref(TRANSPORT_SIZE)
+const width = ref(COLLAPSED_WIDTH)
+const height = ref(COLLAPSED_HEIGHT)
 
 const isDragging = ref(false)
 const isResizing = ref(false)
@@ -32,7 +32,8 @@ let resizeOriginH = 0
 
 const MIN_WIDTH = 200
 const MIN_HEIGHT = 200
-const COLLAPSED_SIZE = TRANSPORT_SIZE
+const COLLAPSED_WIDTH = TRANSPORT_SIZE
+const COLLAPSED_HEIGHT = TRANSPORT_SIZE + 16 + 8
 const EXPANDED_WIDTH = 300
 const EXPANDED_HEIGHT = 400
 
@@ -55,7 +56,7 @@ function getDefaultDimensions() {
   if (hasExpanded.value) {
     return { width: EXPANDED_WIDTH, height: EXPANDED_HEIGHT }
   }
-  return { width: COLLAPSED_SIZE, height: COLLAPSED_SIZE }
+  return { width: COLLAPSED_WIDTH, height: COLLAPSED_HEIGHT }
 }
 
 function getDefaultPosition() {

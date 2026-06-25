@@ -59,7 +59,5 @@ function onCarouselIndex(index) {
         </button>
       </li>
     </ul>
-
-    <hr class="content-section__rule" />
   </section>
 </template>

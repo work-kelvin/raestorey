@@ -57,14 +57,5 @@ function onNavigate(event, id) {
       </a>
     </template>
 
-    <div class="site-nav__archives">
-      <RouterLink
-        to="/archives"
-        class="site-nav__link"
-        :class="{ 'is-active': activeId === 'archives' }"
-      >
-        Archives
-      </RouterLink>
-    </div>
   </nav>
 </template>
