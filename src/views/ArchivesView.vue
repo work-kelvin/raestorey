@@ -1,6 +1,5 @@
 <script setup>
 import SiteNav from '../components/SiteNav.vue'
-import EndlessEightOverlay from '../components/EndlessEightOverlay.vue'
 import ArchivesContent from '../components/ArchivesContent.vue'
 import { endlessEight } from '../data/endlessEight'
 import { initPlaylist } from '../composables/useAudioPlayer'
@@ -22,7 +21,5 @@ onMounted(() => {
     <main class="site-layout__content site-layout__content--static">
       <ArchivesContent />
     </main>
-
-    <EndlessEightOverlay />
   </div>
 </template>

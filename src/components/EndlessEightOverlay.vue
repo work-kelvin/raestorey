@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted, onBeforeUnmount, nextTick, inject, watch } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount, nextTick } from 'vue'
 import { useAudioPlayer } from '../composables/useAudioPlayer'
 import { endlessEight } from '../data/endlessEight'
 
@@ -8,7 +8,12 @@ const TRANSPORT_SIZE = 77
 const { tracks, currentIndex, currentTrack, isPlaying, playTrack, togglePlayback } =
   useAudioPlayer()
 
-const siteRevealed = inject('siteRevealed', ref(true))
+const MIN_WIDTH = 200
+const MIN_HEIGHT = 200
+const COLLAPSED_WIDTH = TRANSPORT_SIZE
+const COLLAPSED_HEIGHT = TRANSPORT_SIZE + 16 + 8
+const EXPANDED_WIDTH = 300
+const EXPANDED_HEIGHT = 400
 
 const overlayRef = ref(null)
 
@@ -29,13 +34,6 @@ let resizeOriginX = 0
 let resizeOriginY = 0
 let resizeOriginW = 0
 let resizeOriginH = 0
-
-const MIN_WIDTH = 200
-const MIN_HEIGHT = 200
-const COLLAPSED_WIDTH = TRANSPORT_SIZE
-const COLLAPSED_HEIGHT = TRANSPORT_SIZE + 16 + 8
-const EXPANDED_WIDTH = 300
-const EXPANDED_HEIGHT = 400
 
 const overlayStyle = computed(() => ({
   left: `${posX.value}px`,
@@ -174,16 +172,8 @@ function onWindowResize() {
   posY.value = Math.min(Math.max(0, posY.value), Math.max(0, maxY))
 }
 
-watch(siteRevealed, (revealed) => {
-  if (revealed) {
-    nextTick(() => applyDefaultState())
-  }
-})
-
 onMounted(() => {
-  if (siteRevealed.value) {
-    nextTick(() => applyDefaultState())
-  }
+  nextTick(() => applyDefaultState())
   window.addEventListener('resize', onWindowResize)
 })
 
@@ -195,7 +185,6 @@ onBeforeUnmount(() => {
 
 <template>
   <aside
-    v-if="siteRevealed"
     ref="overlayRef"
     class="ee-overlay"
     :class="{

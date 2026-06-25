@@ -2,7 +2,6 @@
 import { ref, computed, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import SiteNav from '../components/SiteNav.vue'
-import EndlessEightOverlay from '../components/EndlessEightOverlay.vue'
 import MainContent from '../components/MainContent.vue'
 import { sectionIds } from '../data/sections'
 import { endlessEight } from '../data/endlessEight'
@@ -44,7 +43,5 @@ function scrollToHash() {
     <main ref="scrollRoot" class="site-layout__content">
       <MainContent />
     </main>
-
-    <EndlessEightOverlay />
   </div>
 </template>

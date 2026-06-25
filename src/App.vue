@@ -1,6 +1,7 @@
 <script setup>
 import { provide } from 'vue'
 import SiteIntro from './components/SiteIntro.vue'
+import EndlessEightOverlay from './components/EndlessEightOverlay.vue'
 import { endlessEight } from './data/endlessEight'
 import { initPlaylist, playTrack } from './composables/useAudioPlayer'
 import { useSiteReveal } from './composables/useSiteReveal'
@@ -21,4 +22,5 @@ function onReveal() {
     <SiteIntro v-if="!siteRevealed" @reveal="onReveal" />
   </Transition>
   <RouterView />
+  <EndlessEightOverlay v-if="siteRevealed" />
 </template>
