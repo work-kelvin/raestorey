@@ -13,33 +13,34 @@ const siteRevealed = inject('siteRevealed', ref(true))
 const overlayRef = ref(null)
 
 const hasExpanded = ref(false)
-const posX = ref(0)
-const posY = ref(0)
-const width = ref(COLLAPSED_WIDTH)
-const height = ref(COLLAPSED_HEIGHT)
+const posLeft = ref(0)
+const posBottom = ref(0)
+const width = ref(200)
+const height = ref(121)
 
 const isDragging = ref(false)
 const isResizing = ref(false)
 let resizeCorner = ''
 let dragStartX = 0
 let dragStartY = 0
-let dragOriginX = 0
-let dragOriginY = 0
-let resizeOriginX = 0
-let resizeOriginY = 0
+let dragOriginLeft = 0
+let dragOriginBottom = 0
+let dragOriginTop = 0
+let resizeOriginLeft = 0
+let resizeOriginBottom = 0
 let resizeOriginW = 0
 let resizeOriginH = 0
 
 const MIN_WIDTH = 200
 const MIN_HEIGHT = 200
-const COLLAPSED_WIDTH = 280
-const COLLAPSED_HEIGHT = 127
+const COLLAPSED_WIDTH = 200
+const COLLAPSED_HEIGHT = 121
 const EXPANDED_WIDTH = 300
 const EXPANDED_HEIGHT = 400
 
 const overlayStyle = computed(() => ({
-  left: `${posX.value}px`,
-  top: `${posY.value}px`,
+  left: `${posLeft.value}px`,
+  bottom: `${posBottom.value}px`,
   width: `${width.value}px`,
   height: `${height.value}px`,
 }))
@@ -63,16 +64,16 @@ function getDefaultPosition() {
   const margins = readPageMargins()
   const dims = getDefaultDimensions()
   return {
-    x: margins.left,
-    y: window.innerHeight - dims.height - margins.bottom,
+    left: margins.left,
+    bottom: margins.bottom,
     ...dims,
   }
 }
 
 function applyDefaultState() {
   const defaults = getDefaultPosition()
-  posX.value = defaults.x
-  posY.value = defaults.y
+  posLeft.value = defaults.left
+  posBottom.value = defaults.bottom
   width.value = defaults.width
   height.value = defaults.height
 }
@@ -93,7 +94,6 @@ function handleExpand() {
   const defaults = getDefaultPosition()
   width.value = defaults.width
   height.value = defaults.height
-  posY.value = defaults.y
 }
 
 function onDragStart(event) {
@@ -103,8 +103,8 @@ function onDragStart(event) {
   isDragging.value = true
   dragStartX = event.clientX
   dragStartY = event.clientY
-  dragOriginX = posX.value
-  dragOriginY = posY.value
+  dragOriginLeft = posLeft.value
+  dragOriginBottom = posBottom.value
 
   window.addEventListener('pointermove', onDragMove)
   window.addEventListener('pointerup', onPointerEnd)
@@ -113,8 +113,8 @@ function onDragStart(event) {
 
 function onDragMove(event) {
   if (!isDragging.value) return
-  posX.value = dragOriginX + (event.clientX - dragStartX)
-  posY.value = dragOriginY + (event.clientY - dragStartY)
+  posLeft.value = dragOriginLeft + (event.clientX - dragStartX)
+  posBottom.value = dragOriginBottom - (event.clientY - dragStartY)
 }
 
 function onResizeStart(corner, event) {
@@ -122,8 +122,9 @@ function onResizeStart(corner, event) {
 
   isResizing.value = true
   resizeCorner = corner
-  resizeOriginX = posX.value
-  resizeOriginY = posY.value
+  resizeOriginLeft = posLeft.value
+  resizeOriginBottom = posBottom.value
+  dragOriginTop = window.innerHeight - posBottom.value - height.value
   resizeOriginW = width.value
   resizeOriginH = height.value
   dragStartX = event.clientX
@@ -146,16 +147,19 @@ function onResizeMove(event) {
   }
   if (resizeCorner.includes('w')) {
     const nextWidth = Math.max(MIN_WIDTH, resizeOriginW - dx)
-    posX.value = resizeOriginX + (resizeOriginW - nextWidth)
+    posLeft.value = resizeOriginLeft + (resizeOriginW - nextWidth)
     width.value = nextWidth
   }
   if (resizeCorner.includes('s')) {
-    height.value = Math.max(MIN_HEIGHT, resizeOriginH + dy)
+    const nextHeight = Math.max(MIN_HEIGHT, resizeOriginH + dy)
+    posBottom.value = resizeOriginBottom - (nextHeight - resizeOriginH)
+    height.value = nextHeight
   }
   if (resizeCorner.includes('n')) {
     const nextHeight = Math.max(MIN_HEIGHT, resizeOriginH - dy)
-    posY.value = resizeOriginY + (resizeOriginH - nextHeight)
+    const nextTop = dragOriginTop + dy
     height.value = nextHeight
+    posBottom.value = window.innerHeight - nextTop - nextHeight
   }
 }
 
@@ -170,10 +174,10 @@ function onPointerEnd() {
 
 function onWindowResize() {
   const margins = readPageMargins()
-  const maxX = window.innerWidth - width.value - margins.left
-  const maxY = window.innerHeight - height.value - margins.bottom
-  posX.value = Math.min(Math.max(0, posX.value), Math.max(0, maxX))
-  posY.value = Math.min(Math.max(0, posY.value), Math.max(0, maxY))
+  const maxLeft = window.innerWidth - width.value - margins.left
+  const maxBottom = window.innerHeight - height.value - margins.bottom
+  posLeft.value = Math.min(Math.max(margins.left, posLeft.value), Math.max(margins.left, maxLeft))
+  posBottom.value = Math.min(Math.max(margins.bottom, posBottom.value), Math.max(margins.bottom, maxBottom))
 }
 
 onMounted(() => {
@@ -293,7 +297,8 @@ onBeforeUnmount(() => {
               :key="n"
               class="ee-overlay__marquee-text"
             >
-              {{ endlessEight.marquee.lead }}<em class="ee-overlay__marquee-em">{{ endlessEight.marquee.emphasis }}</em>{{ endlessEight.marquee.tail }}
+              <span class="ee-overlay__marquee-title">{{ endlessEight.marquee.lead }}</span>
+              · <em class="ee-overlay__marquee-em">{{ endlessEight.marquee.emphasis }}</em>{{ endlessEight.marquee.tail }}
             </span>
           </div>
         </div>
@@ -307,7 +312,8 @@ onBeforeUnmount(() => {
               :key="n"
               class="ee-overlay__marquee-text"
             >
-              {{ endlessEight.marquee.lead }}<em class="ee-overlay__marquee-em">{{ endlessEight.marquee.emphasis }}</em>{{ endlessEight.marquee.tail }}
+              <span class="ee-overlay__marquee-title">{{ endlessEight.marquee.lead }}</span>
+              · <em class="ee-overlay__marquee-em">{{ endlessEight.marquee.emphasis }}</em>{{ endlessEight.marquee.tail }}
             </span>
           </div>
         </div>
