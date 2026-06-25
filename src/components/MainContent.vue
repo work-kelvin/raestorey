@@ -2,6 +2,7 @@
 import InformationBlock from './InformationBlock.vue'
 import FeaturedMixSection from './FeaturedMixSection.vue'
 import ReferencesSection from './ReferencesSection.vue'
+import WrittenWorkSection from './WrittenWorkSection.vue'
 </script>
 
 <template>
@@ -9,5 +10,6 @@ import ReferencesSection from './ReferencesSection.vue'
     <InformationBlock />
     <FeaturedMixSection />
     <ReferencesSection />
+    <WrittenWorkSection />
   </div>
 </template>

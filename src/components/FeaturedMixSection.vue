@@ -14,7 +14,7 @@ import FigureGallery from './FigureGallery.vue'
       :meta-right="featuredMix.metaRight"
     />
 
-    <div v-if="featuredMix.about" class="content-section__body prose">
+    <div class="content-section__body prose">
       <p v-for="(paragraph, index) in featuredMix.about.split('\n\n')" :key="index">
         {{ paragraph }}
       </p>

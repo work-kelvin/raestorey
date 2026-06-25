@@ -1,4 +1,41 @@
 export const references = {
   id: 'references',
-  items: [],
+  items: [
+    {
+      id: 'ref-01',
+      type: 'Album',
+      title: 'Example Album',
+      detail: 'Artist Name, 1982',
+      metaLeft: ['Artist Name', '1982'],
+      metaRight: ['LP', 'Label Name'],
+      image: 'https://picsum.photos/seed/ref01/900/1200',
+    },
+    {
+      id: 'ref-02',
+      type: 'Film',
+      title: 'Example Film',
+      detail: 'Director, 1995',
+      metaLeft: ['Director Name', '1995'],
+      metaRight: ['Feature', '35mm'],
+      image: 'https://picsum.photos/seed/ref02/900/1200',
+    },
+    {
+      id: 'ref-03',
+      type: 'Text',
+      title: 'Example Text',
+      detail: 'Author, publication',
+      metaLeft: ['Author Name', 'Publication'],
+      metaRight: ['Essay', 'English'],
+      image: 'https://picsum.photos/seed/ref03/900/1200',
+    },
+    {
+      id: 'ref-04',
+      type: 'Exhibition',
+      title: 'Example Exhibition',
+      detail: 'Venue, city, year',
+      metaLeft: ['Venue Name', 'City', '2024'],
+      metaRight: ['Group show', 'Installation'],
+      image: 'https://picsum.photos/seed/ref04/900/1200',
+    },
+  ],
 }

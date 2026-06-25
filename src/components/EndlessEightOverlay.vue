@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted, onBeforeUnmount, nextTick, inject } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount, nextTick, inject, watch } from 'vue'
 import { useAudioPlayer } from '../composables/useAudioPlayer'
 import { endlessEight } from '../data/endlessEight'
 
@@ -13,34 +13,32 @@ const siteRevealed = inject('siteRevealed', ref(true))
 const overlayRef = ref(null)
 
 const hasExpanded = ref(false)
-const posLeft = ref(0)
-const posBottom = ref(0)
-const width = ref(200)
-const height = ref(121)
+const posX = ref(0)
+const posY = ref(0)
+const width = ref(TRANSPORT_SIZE)
+const height = ref(TRANSPORT_SIZE)
 
 const isDragging = ref(false)
 const isResizing = ref(false)
 let resizeCorner = ''
 let dragStartX = 0
 let dragStartY = 0
-let dragOriginLeft = 0
-let dragOriginBottom = 0
-let dragOriginTop = 0
-let resizeOriginLeft = 0
-let resizeOriginBottom = 0
+let dragOriginX = 0
+let dragOriginY = 0
+let resizeOriginX = 0
+let resizeOriginY = 0
 let resizeOriginW = 0
 let resizeOriginH = 0
 
 const MIN_WIDTH = 200
 const MIN_HEIGHT = 200
-const COLLAPSED_WIDTH = 200
-const COLLAPSED_HEIGHT = 121
+const COLLAPSED_SIZE = TRANSPORT_SIZE
 const EXPANDED_WIDTH = 300
 const EXPANDED_HEIGHT = 400
 
 const overlayStyle = computed(() => ({
-  left: `${posLeft.value}px`,
-  bottom: `${posBottom.value}px`,
+  left: `${posX.value}px`,
+  top: `${posY.value}px`,
   width: `${width.value}px`,
   height: `${height.value}px`,
 }))
@@ -57,23 +55,23 @@ function getDefaultDimensions() {
   if (hasExpanded.value) {
     return { width: EXPANDED_WIDTH, height: EXPANDED_HEIGHT }
   }
-  return { width: COLLAPSED_WIDTH, height: COLLAPSED_HEIGHT }
+  return { width: COLLAPSED_SIZE, height: COLLAPSED_SIZE }
 }
 
 function getDefaultPosition() {
   const margins = readPageMargins()
   const dims = getDefaultDimensions()
   return {
-    left: margins.left,
-    bottom: margins.bottom,
+    x: margins.left,
+    y: window.innerHeight - dims.height - margins.bottom,
     ...dims,
   }
 }
 
 function applyDefaultState() {
   const defaults = getDefaultPosition()
-  posLeft.value = defaults.left
-  posBottom.value = defaults.bottom
+  posX.value = defaults.x
+  posY.value = defaults.y
   width.value = defaults.width
   height.value = defaults.height
 }
@@ -83,17 +81,16 @@ function resetOverlay() {
   applyDefaultState()
 }
 
-function handleTransport() {
-  togglePlayback()
-}
-
-function handleExpand() {
-  if (hasExpanded.value) return
-
+function expandOverlay() {
   hasExpanded.value = true
   const defaults = getDefaultPosition()
   width.value = defaults.width
   height.value = defaults.height
+  posY.value = defaults.y
+}
+
+function handleTransport() {
+  togglePlayback()
 }
 
 function onDragStart(event) {
@@ -103,8 +100,8 @@ function onDragStart(event) {
   isDragging.value = true
   dragStartX = event.clientX
   dragStartY = event.clientY
-  dragOriginLeft = posLeft.value
-  dragOriginBottom = posBottom.value
+  dragOriginX = posX.value
+  dragOriginY = posY.value
 
   window.addEventListener('pointermove', onDragMove)
   window.addEventListener('pointerup', onPointerEnd)
@@ -113,8 +110,8 @@ function onDragStart(event) {
 
 function onDragMove(event) {
   if (!isDragging.value) return
-  posLeft.value = dragOriginLeft + (event.clientX - dragStartX)
-  posBottom.value = dragOriginBottom - (event.clientY - dragStartY)
+  posX.value = dragOriginX + (event.clientX - dragStartX)
+  posY.value = dragOriginY + (event.clientY - dragStartY)
 }
 
 function onResizeStart(corner, event) {
@@ -122,9 +119,8 @@ function onResizeStart(corner, event) {
 
   isResizing.value = true
   resizeCorner = corner
-  resizeOriginLeft = posLeft.value
-  resizeOriginBottom = posBottom.value
-  dragOriginTop = window.innerHeight - posBottom.value - height.value
+  resizeOriginX = posX.value
+  resizeOriginY = posY.value
   resizeOriginW = width.value
   resizeOriginH = height.value
   dragStartX = event.clientX
@@ -147,19 +143,16 @@ function onResizeMove(event) {
   }
   if (resizeCorner.includes('w')) {
     const nextWidth = Math.max(MIN_WIDTH, resizeOriginW - dx)
-    posLeft.value = resizeOriginLeft + (resizeOriginW - nextWidth)
+    posX.value = resizeOriginX + (resizeOriginW - nextWidth)
     width.value = nextWidth
   }
   if (resizeCorner.includes('s')) {
-    const nextHeight = Math.max(MIN_HEIGHT, resizeOriginH + dy)
-    posBottom.value = resizeOriginBottom - (nextHeight - resizeOriginH)
-    height.value = nextHeight
+    height.value = Math.max(MIN_HEIGHT, resizeOriginH + dy)
   }
   if (resizeCorner.includes('n')) {
     const nextHeight = Math.max(MIN_HEIGHT, resizeOriginH - dy)
-    const nextTop = dragOriginTop + dy
+    posY.value = resizeOriginY + (resizeOriginH - nextHeight)
     height.value = nextHeight
-    posBottom.value = window.innerHeight - nextTop - nextHeight
   }
 }
 
@@ -174,14 +167,22 @@ function onPointerEnd() {
 
 function onWindowResize() {
   const margins = readPageMargins()
-  const maxLeft = window.innerWidth - width.value - margins.left
-  const maxBottom = window.innerHeight - height.value - margins.bottom
-  posLeft.value = Math.min(Math.max(margins.left, posLeft.value), Math.max(margins.left, maxLeft))
-  posBottom.value = Math.min(Math.max(margins.bottom, posBottom.value), Math.max(margins.bottom, maxBottom))
+  const maxX = window.innerWidth - width.value - margins.left
+  const maxY = window.innerHeight - height.value - margins.bottom
+  posX.value = Math.min(Math.max(0, posX.value), Math.max(0, maxX))
+  posY.value = Math.min(Math.max(0, posY.value), Math.max(0, maxY))
 }
 
+watch(siteRevealed, (revealed) => {
+  if (revealed) {
+    nextTick(() => applyDefaultState())
+  }
+})
+
 onMounted(() => {
-  nextTick(() => applyDefaultState())
+  if (siteRevealed.value) {
+    nextTick(() => applyDefaultState())
+  }
   window.addEventListener('resize', onWindowResize)
 })
 
@@ -206,6 +207,17 @@ onBeforeUnmount(() => {
     aria-label="Endless Eight"
     @pointerdown="onDragStart"
   >
+    <button
+      v-if="!hasExpanded"
+      type="button"
+      class="ee-overlay__expand"
+      aria-label="Expand player"
+      @click.stop="expandOverlay"
+      @pointerdown.stop
+    >
+      ↗
+    </button>
+
     <button
       v-if="hasExpanded"
       type="button"
@@ -252,97 +264,42 @@ onBeforeUnmount(() => {
     </div>
 
     <div class="ee-overlay__footer">
-      <template v-if="!hasExpanded">
-        <div class="ee-overlay__toolbar">
-          <button
-            type="button"
-            class="ee-overlay__expand"
-            aria-label="Expand player"
-            @click.stop="handleExpand"
-            @pointerdown.stop
+      <div class="ee-overlay__marquee">
+        <div class="ee-overlay__marquee-track">
+          <span
+            v-for="n in 2"
+            :key="n"
+            class="ee-overlay__marquee-text"
           >
-            +
-          </button>
-
-          <button
-            type="button"
-            class="ee-overlay__transport"
-            :aria-label="isPlaying ? 'Pause' : 'Play'"
-            @click.stop="handleTransport"
-            @pointerdown.stop
-          >
-            <svg
-              v-if="!isPlaying"
-              class="ee-overlay__icon"
-              viewBox="0 0 24 24"
-              aria-hidden="true"
-            >
-              <path d="M8 5v14l11-7z" fill="currentColor" />
-            </svg>
-            <svg
-              v-else
-              class="ee-overlay__icon"
-              viewBox="0 0 24 24"
-              aria-hidden="true"
-            >
-              <path d="M6 5h4v14H6zm8 0h4v14h-4z" fill="currentColor" />
-            </svg>
-          </button>
+            {{ endlessEight.marquee.lead }}<em class="ee-overlay__marquee-em">{{ endlessEight.marquee.emphasis }}</em>{{ endlessEight.marquee.tail }}
+          </span>
         </div>
+      </div>
 
-        <div class="ee-overlay__marquee">
-          <div class="ee-overlay__marquee-track">
-            <span
-              v-for="n in 2"
-              :key="n"
-              class="ee-overlay__marquee-text"
-            >
-              <span class="ee-overlay__marquee-title">{{ endlessEight.marquee.lead }}</span>
-              · <em class="ee-overlay__marquee-em">{{ endlessEight.marquee.emphasis }}</em>{{ endlessEight.marquee.tail }}
-            </span>
-          </div>
-        </div>
-      </template>
-
-      <template v-else>
-        <div class="ee-overlay__marquee">
-          <div class="ee-overlay__marquee-track">
-            <span
-              v-for="n in 2"
-              :key="n"
-              class="ee-overlay__marquee-text"
-            >
-              <span class="ee-overlay__marquee-title">{{ endlessEight.marquee.lead }}</span>
-              · <em class="ee-overlay__marquee-em">{{ endlessEight.marquee.emphasis }}</em>{{ endlessEight.marquee.tail }}
-            </span>
-          </div>
-        </div>
-
-        <button
-          type="button"
-          class="ee-overlay__transport"
-          :aria-label="isPlaying ? 'Pause' : 'Play'"
-          @click.stop="handleTransport"
-          @pointerdown.stop
+      <button
+        type="button"
+        class="ee-overlay__transport"
+        :aria-label="isPlaying ? 'Pause' : 'Play'"
+        @click.stop="handleTransport"
+        @pointerdown.stop
+      >
+        <svg
+          v-if="!isPlaying"
+          class="ee-overlay__icon"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
         >
-          <svg
-            v-if="!isPlaying"
-            class="ee-overlay__icon"
-            viewBox="0 0 24 24"
-            aria-hidden="true"
-          >
-            <path d="M8 5v14l11-7z" fill="currentColor" />
-          </svg>
-          <svg
-            v-else
-            class="ee-overlay__icon"
-            viewBox="0 0 24 24"
-            aria-hidden="true"
-          >
-            <path d="M6 5h4v14H6zm8 0h4v14h-4z" fill="currentColor" />
-          </svg>
-        </button>
-      </template>
+          <path d="M8 5v14l11-7z" fill="currentColor" />
+        </svg>
+        <svg
+          v-else
+          class="ee-overlay__icon"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+          <path d="M6 5h4v14H6zm8 0h4v14h-4z" fill="currentColor" />
+        </svg>
+      </button>
     </div>
 
     <div
