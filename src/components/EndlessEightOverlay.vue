@@ -15,8 +15,8 @@ const overlayRef = ref(null)
 const hasExpanded = ref(false)
 const posX = ref(0)
 const posY = ref(0)
-const width = ref(TRANSPORT_SIZE)
-const height = ref(TRANSPORT_SIZE)
+const width = ref(COLLAPSED_WIDTH)
+const height = ref(COLLAPSED_HEIGHT)
 
 const isDragging = ref(false)
 const isResizing = ref(false)
@@ -32,7 +32,8 @@ let resizeOriginH = 0
 
 const MIN_WIDTH = 200
 const MIN_HEIGHT = 200
-const COLLAPSED_SIZE = TRANSPORT_SIZE
+const COLLAPSED_WIDTH = 280
+const COLLAPSED_HEIGHT = 127
 const EXPANDED_WIDTH = 300
 const EXPANDED_HEIGHT = 400
 
@@ -55,7 +56,7 @@ function getDefaultDimensions() {
   if (hasExpanded.value) {
     return { width: EXPANDED_WIDTH, height: EXPANDED_HEIGHT }
   }
-  return { width: COLLAPSED_SIZE, height: COLLAPSED_SIZE }
+  return { width: COLLAPSED_WIDTH, height: COLLAPSED_HEIGHT }
 }
 
 function getDefaultPosition() {
@@ -246,47 +247,46 @@ onBeforeUnmount(() => {
       </ul>
     </div>
 
-    <div
-      class="ee-overlay__footer"
-      :class="{ 'ee-overlay__footer--collapsed': !hasExpanded }"
-    >
+    <div class="ee-overlay__footer">
       <template v-if="!hasExpanded">
-        <button
-          type="button"
-          class="ee-overlay__expand"
-          aria-label="Expand player"
-          @click.stop="handleExpand"
-          @pointerdown.stop
-        >
-          +
-        </button>
-
-        <button
-          type="button"
-          class="ee-overlay__transport"
-          :aria-label="isPlaying ? 'Pause' : 'Play'"
-          @click.stop="handleTransport"
-          @pointerdown.stop
-        >
-          <svg
-            v-if="!isPlaying"
-            class="ee-overlay__icon"
-            viewBox="0 0 24 24"
-            aria-hidden="true"
+        <div class="ee-overlay__toolbar">
+          <button
+            type="button"
+            class="ee-overlay__expand"
+            aria-label="Expand player"
+            @click.stop="handleExpand"
+            @pointerdown.stop
           >
-            <path d="M8 5v14l11-7z" fill="currentColor" />
-          </svg>
-          <svg
-            v-else
-            class="ee-overlay__icon"
-            viewBox="0 0 24 24"
-            aria-hidden="true"
-          >
-            <path d="M6 5h4v14H6zm8 0h4v14h-4z" fill="currentColor" />
-          </svg>
-        </button>
+            +
+          </button>
 
-        <div class="ee-overlay__marquee ee-overlay__marquee--below">
+          <button
+            type="button"
+            class="ee-overlay__transport"
+            :aria-label="isPlaying ? 'Pause' : 'Play'"
+            @click.stop="handleTransport"
+            @pointerdown.stop
+          >
+            <svg
+              v-if="!isPlaying"
+              class="ee-overlay__icon"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <path d="M8 5v14l11-7z" fill="currentColor" />
+            </svg>
+            <svg
+              v-else
+              class="ee-overlay__icon"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <path d="M6 5h4v14H6zm8 0h4v14h-4z" fill="currentColor" />
+            </svg>
+          </button>
+        </div>
+
+        <div class="ee-overlay__marquee">
           <div class="ee-overlay__marquee-track">
             <span
               v-for="n in 2"
