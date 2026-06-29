@@ -6,7 +6,7 @@ export const endlessEight = {
   title: 'Endless Eight',
   marquee: {
     lead: 'Endless Eight · ',
-    emphasis: 'updates monthly',
+    emphasis: 'updates weekly',
     tail: ' ·',
   },
   recreatedNote: ' ',

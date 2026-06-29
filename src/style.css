@@ -82,12 +82,14 @@
 
   --ee-overlay-bottom: 40px;
   --ee-transport-size: 77px;
-  --ee-marquee-height: 24px;
+  --ee-corner-inset: 12px;
+  --ee-marquee-height: 26px;
   --ee-collapsed-gap: 10px;
-  --ee-collapsed-pad-bottom: 22px;
+  --ee-collapsed-pad-bottom: 32px;
+  --ee-expanded-pad-bottom: 44px;
   --ee-collapsed-height: calc(
     var(--ee-transport-size) + var(--ee-collapsed-gap) + var(--ee-marquee-height) +
-      var(--ee-collapsed-pad-bottom) + 8px
+      var(--ee-collapsed-pad-bottom) + 10px
   );
 
   --font-title: 'Gangster SN', Georgia, serif;
@@ -303,7 +305,7 @@ img {
 .ee-overlay--expanded {
   display: flex;
   flex-direction: column;
-  padding: 12px 14px 30px;
+  padding: 12px 14px var(--ee-expanded-pad-bottom);
   box-sizing: border-box;
 }
 
@@ -319,11 +321,13 @@ img {
 .ee-overlay__expand,
 .ee-overlay__reset {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: var(--ee-corner-inset);
+  right: var(--ee-corner-inset);
   z-index: 4;
   padding: 0;
+  margin: 0;
   line-height: 1;
+  font-size: 15px;
   color: var(--text-muted);
   cursor: pointer;
   pointer-events: auto;
@@ -344,9 +348,9 @@ img {
   gap: 10px;
   flex: 1;
   min-height: 0;
-  padding-top: 16px;
+  padding-top: 28px;
   padding-right: 2px;
-  padding-bottom: calc(var(--ee-transport-size) + 30px);
+  padding-bottom: calc(var(--ee-transport-size) + var(--ee-expanded-pad-bottom));
   cursor: grab;
   overflow: hidden;
 }
@@ -380,10 +384,10 @@ img {
   overflow: hidden;
   display: flex;
   align-items: center;
-  height: var(--ee-marquee-height);
+  min-height: var(--ee-marquee-height);
   color: var(--text-muted);
   font-size: var(--size);
-  line-height: var(--ee-marquee-height);
+  line-height: var(--line);
   white-space: nowrap;
 }
 
@@ -391,8 +395,7 @@ img {
   display: inline-flex;
   align-items: center;
   width: max-content;
-  height: var(--ee-marquee-height);
-  line-height: var(--ee-marquee-height);
+  line-height: var(--line);
   white-space: nowrap;
   animation: ee-marquee 20s linear infinite;
 }
@@ -400,8 +403,7 @@ img {
 .ee-overlay__marquee-text {
   display: inline-block;
   flex-shrink: 0;
-  height: var(--ee-marquee-height);
-  line-height: var(--ee-marquee-height);
+  line-height: var(--line);
   padding-right: 4rem;
   white-space: nowrap;
 }
@@ -497,12 +499,13 @@ img {
 .ee-overlay--expanded .ee-overlay__footer {
   left: 12px;
   right: 12px;
-  bottom: 30px;
+  bottom: var(--ee-expanded-pad-bottom);
   flex-direction: row;
   align-items: center;
   gap: 12px;
   width: auto;
-  height: var(--ee-transport-size);
+  height: auto;
+  min-height: var(--ee-transport-size);
   padding: 0;
   box-sizing: border-box;
 }
@@ -512,7 +515,7 @@ img {
   min-width: 0;
   width: auto;
   max-width: none;
-  height: var(--ee-marquee-height);
+  min-height: var(--ee-marquee-height);
   align-self: center;
 }
 
@@ -534,7 +537,7 @@ img {
   justify-content: flex-end;
   gap: var(--ee-collapsed-gap);
   height: calc(
-    var(--ee-collapsed-height) - var(--ee-collapsed-pad-bottom) - 8px
+    var(--ee-collapsed-height) - var(--ee-collapsed-pad-bottom) - 10px
   );
   padding-bottom: 0;
   box-sizing: border-box;
@@ -556,8 +559,8 @@ img {
 .ee-overlay--collapsed .ee-overlay__marquee {
   flex-shrink: 0;
   width: 100%;
-  height: var(--ee-marquee-height);
-  padding: 0 8px 4px;
+  min-height: var(--ee-marquee-height);
+  padding: 0 8px;
 }
 
 .ee-overlay__transport {
