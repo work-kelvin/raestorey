@@ -1,21 +1,15 @@
 <script setup>
 import { ref, computed, onMounted, onBeforeUnmount, nextTick } from 'vue'
-import { useAudioPlayer } from '../composables/useAudioPlayer'
-import { endlessEight } from '../data/endlessEight'
+import { site } from '../config/site'
 
-const TRANSPORT_SIZE = 77
+const emit = defineEmits(['close'])
 
-const { tracks, currentIndex, currentTrack, isPlaying, playTrack, togglePlayback } =
-  useAudioPlayer()
-
+const COLLAPSED_WIDTH = 88
+const COLLAPSED_HEIGHT = 36
+const EXPANDED_WIDTH = 420
+const EXPANDED_HEIGHT = 560
 const MIN_WIDTH = 200
-const MIN_HEIGHT = 200
-const COLLAPSED_WIDTH = TRANSPORT_SIZE
-const COLLAPSED_HEIGHT = TRANSPORT_SIZE + 16 + 8
-const EXPANDED_WIDTH = 320
-const EXPANDED_HEIGHT = 400
-
-const overlayRef = ref(null)
+const MIN_HEIGHT = 120
 
 const hasExpanded = ref(false)
 const posX = ref(0)
@@ -35,7 +29,7 @@ let resizeOriginY = 0
 let resizeOriginW = 0
 let resizeOriginH = 0
 
-const overlayStyle = computed(() => ({
+const panelStyle = computed(() => ({
   left: `${posX.value}px`,
   top: `${posY.value}px`,
   width: `${width.value}px`,
@@ -46,7 +40,7 @@ function readPageMargins() {
   const root = getComputedStyle(document.documentElement)
   return {
     left: parseFloat(root.getPropertyValue('--page-margin-left')) || 70,
-    bottom: parseFloat(root.getPropertyValue('--ee-overlay-bottom')) || 40,
+    top: parseFloat(root.getPropertyValue('--page-margin-top')) || 70,
   }
 }
 
@@ -61,8 +55,8 @@ function getDefaultPosition() {
   const margins = readPageMargins()
   const dims = getDefaultDimensions()
   return {
-    x: margins.left,
-    y: window.innerHeight - dims.height - margins.bottom,
+    x: margins.left + 180,
+    y: margins.top + 120,
     ...dims,
   }
 }
@@ -75,12 +69,12 @@ function applyDefaultState() {
   height.value = defaults.height
 }
 
-function resetOverlay() {
+function collapsePanel() {
   hasExpanded.value = false
   applyDefaultState()
 }
 
-function expandOverlay() {
+function expandPanel() {
   hasExpanded.value = true
   const defaults = getDefaultPosition()
   width.value = defaults.width
@@ -88,13 +82,9 @@ function expandOverlay() {
   posY.value = defaults.y
 }
 
-function handleTransport() {
-  togglePlayback()
-}
-
 function onDragStart(event) {
   if (event.button !== 0) return
-  if (event.target.closest('button, .ee-overlay__resize')) return
+  if (event.target.closest('button, .cv-overlay__resize, iframe')) return
 
   isDragging.value = true
   dragStartX = event.clientX
@@ -164,45 +154,34 @@ function onPointerEnd() {
   window.removeEventListener('pointerup', onPointerEnd)
 }
 
-function onWindowResize() {
-  const margins = readPageMargins()
-  const maxX = window.innerWidth - width.value - margins.left
-  const maxY = window.innerHeight - height.value - margins.bottom
-  posX.value = Math.min(Math.max(0, posX.value), Math.max(0, maxX))
-  posY.value = Math.min(Math.max(0, posY.value), Math.max(0, maxY))
-}
-
 onMounted(() => {
   nextTick(() => applyDefaultState())
-  window.addEventListener('resize', onWindowResize)
 })
 
 onBeforeUnmount(() => {
   onPointerEnd()
-  window.removeEventListener('resize', onWindowResize)
 })
 </script>
 
 <template>
   <aside
-    ref="overlayRef"
-    class="ee-overlay"
+    class="cv-overlay"
     :class="{
-      'ee-overlay--expanded': hasExpanded,
-      'ee-overlay--collapsed': !hasExpanded,
-      'ee-overlay--dragging': isDragging,
-      'ee-overlay--resizing': isResizing,
+      'cv-overlay--expanded': hasExpanded,
+      'cv-overlay--collapsed': !hasExpanded,
+      'cv-overlay--dragging': isDragging,
+      'cv-overlay--resizing': isResizing,
     }"
-    :style="overlayStyle"
-    aria-label="Endless Eight"
+    :style="panelStyle"
+    aria-label="C.V."
     @pointerdown="onDragStart"
   >
     <button
       v-if="!hasExpanded"
       type="button"
-      class="ee-overlay__expand"
-      aria-label="Expand player"
-      @click.stop="expandOverlay"
+      class="cv-overlay__expand"
+      aria-label="Expand C.V."
+      @click.stop="expandPanel"
       @pointerdown.stop
     >
       ↗
@@ -211,92 +190,39 @@ onBeforeUnmount(() => {
     <button
       v-if="hasExpanded"
       type="button"
-      class="ee-overlay__reset"
-      aria-label="Collapse player"
-      @click.stop="resetOverlay"
+      class="cv-overlay__reset"
+      aria-label="Collapse C.V."
+      @click.stop="collapsePanel"
       @pointerdown.stop
     >
       ↙
     </button>
 
-    <div v-if="hasExpanded" class="ee-overlay__content">
-      <div class="ee-overlay__now-playing">
-        <p class="ee-overlay__song">{{ currentTrack?.title }}</p>
-        <p class="ee-overlay__artist">{{ currentTrack?.artist }}</p>
-      </div>
+    <button
+      type="button"
+      class="cv-overlay__close"
+      aria-label="Close C.V."
+      @click.stop="emit('close')"
+      @pointerdown.stop
+    >
+      ×
+    </button>
 
-      <ul class="ee-overlay__list">
-        <li v-for="(track, index) in tracks" :key="track.id">
-          <button
-            type="button"
-            class="ee-overlay__track"
-            :class="{
-              'is-active': index === currentIndex,
-              'is-playing': isPlaying && index === currentIndex,
-            }"
-            @click.stop="playTrack(index)"
-            @pointerdown.stop
-          >
-            <span class="ee-overlay__track-song">
-              <span
-                v-if="index === currentIndex"
-                class="ee-overlay__mark"
-                aria-hidden="true"
-              >
-                {{ isPlaying ? '▶' : '▷' }}
-              </span>
-              {{ track.title }}
-            </span>
-            <span class="ee-overlay__track-artist">{{ track.artist }}</span>
-          </button>
-        </li>
-      </ul>
-    </div>
+    <p v-if="!hasExpanded" class="cv-overlay__label">C.V.</p>
 
-    <div class="ee-overlay__footer">
-      <div class="ee-overlay__marquee">
-        <div class="ee-overlay__marquee-track">
-          <span
-            v-for="n in 2"
-            :key="n"
-            class="ee-overlay__marquee-text"
-          >
-            {{ endlessEight.marquee.lead }}<em class="ee-overlay__marquee-em">{{ endlessEight.marquee.emphasis }}</em>{{ endlessEight.marquee.tail }}
-          </span>
-        </div>
-      </div>
-
-      <button
-        type="button"
-        class="ee-overlay__transport"
-        :aria-label="isPlaying ? 'Pause' : 'Play'"
-        @click.stop="handleTransport"
-        @pointerdown.stop
-      >
-        <svg
-          v-if="!isPlaying"
-          class="ee-overlay__icon"
-          viewBox="0 0 24 24"
-          aria-hidden="true"
-        >
-          <path d="M8 5v14l11-7z" fill="currentColor" />
-        </svg>
-        <svg
-          v-else
-          class="ee-overlay__icon"
-          viewBox="0 0 24 24"
-          aria-hidden="true"
-        >
-          <path d="M6 5h4v14H6zm8 0h4v14h-4z" fill="currentColor" />
-        </svg>
-      </button>
+    <div v-if="hasExpanded" class="cv-overlay__content">
+      <iframe
+        class="cv-overlay__frame"
+        :src="site.cvUrl"
+        title="Rae Storey C.V."
+      />
     </div>
 
     <div
       v-for="corner in ['nw', 'ne', 'sw', 'se']"
       :key="corner"
-      class="ee-overlay__resize"
-      :class="`ee-overlay__resize--${corner}`"
+      class="cv-overlay__resize"
+      :class="`cv-overlay__resize--${corner}`"
       @pointerdown="onResizeStart(corner, $event)"
     />
   </aside>

@@ -311,10 +311,10 @@ img {
 
 .ee-overlay__expand {
   position: absolute;
-  top: 4px;
-  right: 4px;
+  top: 10px;
+  right: 12px;
   z-index: 4;
-  padding: 2px 4px;
+  padding: 4px;
   line-height: 1;
   color: var(--text-muted);
   cursor: pointer;
@@ -348,7 +348,7 @@ img {
   min-height: 0;
   padding-top: 16px;
   padding-right: 2px;
-  padding-bottom: calc(var(--ee-transport-size) + 10px);
+  padding-bottom: calc(var(--ee-transport-size) + var(--line) + 22px);
   cursor: grab;
   overflow: hidden;
 }
@@ -486,14 +486,26 @@ img {
 }
 
 .ee-overlay--expanded .ee-overlay__footer {
-  left: 14px;
-  right: 14px;
-  bottom: 10px;
-  flex-direction: row;
-  align-items: center;
-  gap: 10px;
-  width: auto;
-  height: var(--ee-transport-size);
+  left: 0;
+  right: 0;
+  bottom: 0;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 6px;
+  width: 100%;
+  height: auto;
+  padding: 0 12px 10px;
+  box-sizing: border-box;
+}
+
+.ee-overlay--expanded .ee-overlay__marquee {
+  width: 100%;
+  flex: none;
+  max-width: none;
+}
+
+.ee-overlay--expanded .ee-overlay__transport {
+  align-self: flex-end;
 }
 
 .ee-overlay__marquee,
@@ -512,6 +524,7 @@ img {
   width: var(--ee-transport-size);
   height: var(--ee-transport-size);
   align-self: center;
+  margin-top: 10px;
 }
 
 .ee-overlay--collapsed .ee-overlay__icon {
@@ -644,9 +657,148 @@ img {
   line-height: var(--line);
 }
 
-.information__profile a {
-  text-decoration: underline;
-  text-underline-offset: 2px;
+.information__link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.information__link:hover {
+  color: var(--active);
+}
+
+.information__cv-trigger {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  text-align: left;
+}
+
+/* C.V. overlay */
+
+.cv-overlay {
+  position: fixed;
+  z-index: 110;
+  background: rgba(245, 245, 245, 0.94);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 14px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+  user-select: none;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.cv-overlay--collapsed {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 14px;
+}
+
+.cv-overlay--expanded {
+  display: flex;
+  flex-direction: column;
+  padding: 12px 14px;
+}
+
+.cv-overlay--dragging {
+  cursor: grabbing;
+  touch-action: none;
+}
+
+.cv-overlay--resizing {
+  touch-action: none;
+}
+
+.cv-overlay__expand,
+.cv-overlay__reset,
+.cv-overlay__close {
+  position: absolute;
+  z-index: 2;
+  padding: 4px;
+  line-height: 1;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.cv-overlay__expand {
+  top: 8px;
+  right: 28px;
+}
+
+.cv-overlay__reset {
+  top: 8px;
+  right: 28px;
+}
+
+.cv-overlay__close {
+  top: 8px;
+  right: 8px;
+  font-size: 18px;
+}
+
+.cv-overlay__expand:hover,
+.cv-overlay__reset:hover,
+.cv-overlay__close:hover {
+  color: var(--active);
+}
+
+.cv-overlay__label {
+  margin: 0;
+  color: var(--active);
+  line-height: var(--line);
+}
+
+.cv-overlay__content {
+  flex: 1;
+  min-height: 0;
+  margin-top: 20px;
+  cursor: grab;
+}
+
+.cv-overlay__frame {
+  width: 100%;
+  height: 100%;
+  border: none;
+  background: #ffffff;
+}
+
+.cv-overlay__resize {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  z-index: 3;
+}
+
+.cv-overlay__resize--nw {
+  top: 0;
+  left: 0;
+  cursor: nwse-resize;
+}
+
+.cv-overlay__resize--ne {
+  top: 0;
+  right: 0;
+  cursor: nesw-resize;
+}
+
+.cv-overlay__resize--sw {
+  bottom: 0;
+  left: 0;
+  cursor: nesw-resize;
+}
+
+.cv-overlay__resize--se {
+  bottom: 0;
+  right: 0;
+  cursor: nwse-resize;
+}
+
+.cv-overlay--collapsed .cv-overlay__resize {
+  display: none;
 }
 
 .content-section.is-wip {

@@ -1,6 +1,10 @@
 <script setup>
+import { ref } from 'vue'
 import { site } from '../config/site'
 import SectionHeader from './SectionHeader.vue'
+import CvOverlay from './CvOverlay.vue'
+
+const cvOpen = ref(false)
 </script>
 
 <template>
@@ -13,11 +17,23 @@ import SectionHeader from './SectionHeader.vue'
 
     <div class="information__profile">
       <p>
-        <a :href="`mailto:${site.email}`">{{ site.email }}</a>
+        <a class="information__link" :href="`mailto:${site.email}`">{{ site.contactLabel }}</a>
       </p>
       <p>
-        <a :href="site.instagram" target="_blank" rel="noopener noreferrer">{{ site.instagramHandle }}</a>
+        <a
+          class="information__link"
+          :href="site.instagram"
+          target="_blank"
+          rel="noopener noreferrer"
+        >{{ site.instagramHandle }}</a>
+      </p>
+      <p>
+        <button type="button" class="information__link information__cv-trigger" @click="cvOpen = true">
+          C.V.
+        </button>
       </p>
     </div>
+
+    <CvOverlay v-if="cvOpen" @close="cvOpen = false" />
   </section>
 </template>
