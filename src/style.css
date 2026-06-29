@@ -82,10 +82,12 @@
 
   --ee-overlay-bottom: 40px;
   --ee-transport-size: 77px;
-  --ee-marquee-height: 18px;
-  --ee-collapsed-pad-bottom: 10px;
+  --ee-marquee-height: 22px;
+  --ee-collapsed-gap: 10px;
+  --ee-collapsed-pad-bottom: 16px;
   --ee-collapsed-height: calc(
-    var(--ee-transport-size) + 8px + var(--ee-marquee-height) + var(--ee-collapsed-pad-bottom)
+    var(--ee-transport-size) + var(--ee-collapsed-gap) + var(--ee-marquee-height) +
+      var(--ee-collapsed-pad-bottom) + 6px
   );
 
   --font-title: 'Gangster SN', Georgia, serif;
@@ -301,7 +303,7 @@ img {
 .ee-overlay--expanded {
   display: flex;
   flex-direction: column;
-  padding: 12px 14px 18px;
+  padding: 12px 14px 24px;
   box-sizing: border-box;
 }
 
@@ -353,7 +355,7 @@ img {
   min-height: 0;
   padding-top: 16px;
   padding-right: 2px;
-  padding-bottom: calc(var(--ee-transport-size) + 18px);
+  padding-bottom: calc(var(--ee-transport-size) + 24px);
   cursor: grab;
   overflow: hidden;
 }
@@ -497,7 +499,7 @@ img {
 .ee-overlay--expanded .ee-overlay__footer {
   left: 12px;
   right: 12px;
-  bottom: 18px;
+  bottom: 24px;
   flex-direction: row;
   align-items: center;
   gap: 12px;
@@ -527,10 +529,15 @@ img {
 }
 
 .ee-overlay--collapsed .ee-overlay__footer {
+  left: 0;
+  right: 0;
+  bottom: var(--ee-collapsed-pad-bottom);
   flex-direction: column-reverse;
   justify-content: flex-end;
-  gap: 8px;
-  height: calc(var(--ee-collapsed-height) - var(--ee-collapsed-pad-bottom));
+  gap: var(--ee-collapsed-gap);
+  height: calc(
+    var(--ee-collapsed-height) - var(--ee-collapsed-pad-bottom) - 6px
+  );
   padding-bottom: 0;
   box-sizing: border-box;
 }
@@ -552,7 +559,7 @@ img {
   flex-shrink: 0;
   width: 100%;
   height: var(--ee-marquee-height);
-  padding: 0 6px;
+  padding: 0 8px 2px;
 }
 
 .ee-overlay__transport {
@@ -702,6 +709,9 @@ img {
 .cv-overlay {
   position: fixed;
   z-index: 110;
+  display: flex;
+  flex-direction: column;
+  padding: 12px 14px;
   background: rgba(245, 245, 245, 0.94);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
@@ -710,19 +720,6 @@ img {
   user-select: none;
   box-sizing: border-box;
   overflow: hidden;
-}
-
-.cv-overlay--collapsed {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding-top: 14px;
-}
-
-.cv-overlay--expanded {
-  display: flex;
-  flex-direction: column;
-  padding: 12px 14px;
 }
 
 .cv-overlay--dragging {
@@ -734,49 +731,26 @@ img {
   touch-action: none;
 }
 
-.cv-overlay__expand,
-.cv-overlay__reset,
 .cv-overlay__close {
   position: absolute;
+  top: 8px;
+  right: 8px;
   z-index: 2;
   padding: 4px;
   line-height: 1;
+  font-size: 18px;
   color: var(--text-muted);
   cursor: pointer;
 }
 
-.cv-overlay__expand {
-  top: 8px;
-  right: 28px;
-}
-
-.cv-overlay__reset {
-  top: 8px;
-  right: 28px;
-}
-
-.cv-overlay__close {
-  top: 8px;
-  right: 8px;
-  font-size: 18px;
-}
-
-.cv-overlay__expand:hover,
-.cv-overlay__reset:hover,
 .cv-overlay__close:hover {
   color: var(--active);
-}
-
-.cv-overlay__label {
-  margin: 0;
-  color: var(--active);
-  line-height: var(--line);
 }
 
 .cv-overlay__content {
   flex: 1;
   min-height: 0;
-  margin-top: 24px;
+  margin-top: 20px;
   cursor: grab;
 }
 
@@ -824,10 +798,6 @@ img {
   bottom: 0;
   right: 0;
   cursor: nwse-resize;
-}
-
-.cv-overlay--collapsed .cv-overlay__resize {
-  display: none;
 }
 
 .content-section.is-wip {

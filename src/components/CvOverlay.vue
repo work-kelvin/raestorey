@@ -3,18 +3,15 @@ import { ref, computed, onMounted, onBeforeUnmount, nextTick } from 'vue'
 
 const emit = defineEmits(['close'])
 
-const COLLAPSED_WIDTH = 88
-const COLLAPSED_HEIGHT = 36
-const EXPANDED_WIDTH = 420
-const EXPANDED_HEIGHT = 560
+const DEFAULT_WIDTH = 420
+const DEFAULT_HEIGHT = 560
 const MIN_WIDTH = 200
 const MIN_HEIGHT = 120
 
-const hasExpanded = ref(false)
 const posX = ref(0)
 const posY = ref(0)
-const width = ref(COLLAPSED_WIDTH)
-const height = ref(COLLAPSED_HEIGHT)
+const width = ref(DEFAULT_WIDTH)
+const height = ref(DEFAULT_HEIGHT)
 
 const isDragging = ref(false)
 const isResizing = ref(false)
@@ -43,20 +40,13 @@ function readPageMargins() {
   }
 }
 
-function getDefaultDimensions() {
-  if (hasExpanded.value) {
-    return { width: EXPANDED_WIDTH, height: EXPANDED_HEIGHT }
-  }
-  return { width: COLLAPSED_WIDTH, height: COLLAPSED_HEIGHT }
-}
-
 function getDefaultPosition() {
   const margins = readPageMargins()
-  const dims = getDefaultDimensions()
   return {
     x: margins.left + 180,
     y: margins.top + 120,
-    ...dims,
+    width: DEFAULT_WIDTH,
+    height: DEFAULT_HEIGHT,
   }
 }
 
@@ -66,19 +56,6 @@ function applyDefaultState() {
   posY.value = defaults.y
   width.value = defaults.width
   height.value = defaults.height
-}
-
-function collapsePanel() {
-  hasExpanded.value = false
-  applyDefaultState()
-}
-
-function expandPanel() {
-  hasExpanded.value = true
-  const defaults = getDefaultPosition()
-  width.value = defaults.width
-  height.value = defaults.height
-  posY.value = defaults.y
 }
 
 function onDragStart(event) {
@@ -166,8 +143,6 @@ onBeforeUnmount(() => {
   <aside
     class="cv-overlay"
     :class="{
-      'cv-overlay--expanded': hasExpanded,
-      'cv-overlay--collapsed': !hasExpanded,
       'cv-overlay--dragging': isDragging,
       'cv-overlay--resizing': isResizing,
     }"
@@ -175,28 +150,6 @@ onBeforeUnmount(() => {
     aria-label="C.V."
     @pointerdown="onDragStart"
   >
-    <button
-      v-if="!hasExpanded"
-      type="button"
-      class="cv-overlay__expand"
-      aria-label="Expand C.V."
-      @click.stop="expandPanel"
-      @pointerdown.stop
-    >
-      ↗
-    </button>
-
-    <button
-      v-if="hasExpanded"
-      type="button"
-      class="cv-overlay__reset"
-      aria-label="Collapse C.V."
-      @click.stop="collapsePanel"
-      @pointerdown.stop
-    >
-      ↙
-    </button>
-
     <button
       type="button"
       class="cv-overlay__close"
@@ -207,9 +160,7 @@ onBeforeUnmount(() => {
       ×
     </button>
 
-    <p v-if="!hasExpanded" class="cv-overlay__label">C.V.</p>
-
-    <div v-if="hasExpanded" class="cv-overlay__content">
+    <div class="cv-overlay__content">
       <div class="cv-overlay__sheet" aria-label="C.V." />
     </div>
 
