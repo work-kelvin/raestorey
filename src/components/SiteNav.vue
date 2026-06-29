@@ -2,8 +2,6 @@
 import { useRouter, useRoute } from 'vue-router'
 import { site } from '../config/site'
 import { navSections } from '../data/sections'
-import { featuredMix } from '../data/featuredMix'
-
 defineProps({
   activeId: {
     type: String,
@@ -47,13 +45,7 @@ function onNavigate(event, id) {
         :class="{ 'is-active': activeId === section.id }"
         @click="onNavigate($event, section.id)"
       >
-        {{ section.number }}.
-        <template v-if="section.id === 'mix-01'">
-          {{ section.label }} <em>{{ featuredMix.title }}</em>
-        </template>
-        <template v-else>
-          {{ section.label }}
-        </template>
+        {{ section.number }}. {{ section.label }}
       </a>
     </template>
 

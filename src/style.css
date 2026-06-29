@@ -82,7 +82,7 @@
 
   --ee-overlay-bottom: 40px;
   --ee-transport-size: 77px;
-  --ee-collapsed-height: calc(var(--ee-transport-size) + var(--line) + 8px);
+  --ee-collapsed-height: calc(var(--ee-transport-size) + 8px + var(--line) + 4px);
 
   --font-title: 'Gangster SN', Georgia, serif;
   --font-header: 'Monument Grotesk', 'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -375,12 +375,12 @@ img {
 .ee-overlay__marquee {
   flex: 1;
   min-width: 0;
-  overflow-x: hidden;
-  overflow-y: visible;
+  overflow: hidden;
   display: flex;
   align-items: center;
-  min-height: var(--line);
+  height: var(--line);
   color: var(--text-muted);
+  font-size: var(--size);
   line-height: var(--line);
   white-space: nowrap;
 }
@@ -494,7 +494,8 @@ img {
   align-items: center;
   gap: 12px;
   width: auto;
-  height: var(--ee-transport-size);
+  height: auto;
+  min-height: var(--ee-transport-size);
   padding: 0;
   box-sizing: border-box;
 }
@@ -504,7 +505,8 @@ img {
   min-width: 0;
   width: auto;
   max-width: none;
-  padding-bottom: 0;
+  height: var(--line);
+  align-self: center;
 }
 
 .ee-overlay--expanded .ee-overlay__transport {
@@ -520,7 +522,10 @@ img {
 .ee-overlay--collapsed .ee-overlay__footer {
   flex-direction: column-reverse;
   justify-content: flex-end;
+  gap: 8px;
   height: var(--ee-collapsed-height);
+  padding-bottom: 4px;
+  box-sizing: border-box;
 }
 
 .ee-overlay--collapsed .ee-overlay__transport {
@@ -528,7 +533,7 @@ img {
   width: var(--ee-transport-size);
   height: var(--ee-transport-size);
   align-self: center;
-  margin-top: 14px;
+  margin-top: 0;
 }
 
 .ee-overlay--collapsed .ee-overlay__icon {
@@ -540,7 +545,7 @@ img {
   flex-shrink: 0;
   width: 100%;
   height: var(--line);
-  padding: 0 4px 4px;
+  padding: 0 4px;
 }
 
 .ee-overlay__transport {
