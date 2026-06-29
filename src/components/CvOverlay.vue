@@ -1,6 +1,5 @@
 <script setup>
 import { ref, computed, onMounted, onBeforeUnmount, nextTick } from 'vue'
-import { site } from '../config/site'
 
 const emit = defineEmits(['close'])
 
@@ -84,7 +83,7 @@ function expandPanel() {
 
 function onDragStart(event) {
   if (event.button !== 0) return
-  if (event.target.closest('button, .cv-overlay__resize, iframe')) return
+  if (event.target.closest('button, .cv-overlay__resize, .cv-overlay__sheet')) return
 
   isDragging.value = true
   dragStartX = event.clientX
@@ -211,11 +210,7 @@ onBeforeUnmount(() => {
     <p v-if="!hasExpanded" class="cv-overlay__label">C.V.</p>
 
     <div v-if="hasExpanded" class="cv-overlay__content">
-      <iframe
-        class="cv-overlay__frame"
-        :src="site.cvUrl"
-        title="Rae Storey C.V."
-      />
+      <div class="cv-overlay__sheet" aria-label="C.V." />
     </div>
 
     <div

@@ -296,7 +296,7 @@ img {
 .ee-overlay--expanded {
   display: flex;
   flex-direction: column;
-  padding: 12px 14px 0;
+  padding: 12px 14px 12px;
   box-sizing: border-box;
 }
 
@@ -311,10 +311,10 @@ img {
 
 .ee-overlay__expand {
   position: absolute;
-  top: 10px;
-  right: 12px;
+  top: 4px;
+  right: 4px;
   z-index: 4;
-  padding: 4px;
+  padding: 2px;
   line-height: 1;
   color: var(--text-muted);
   cursor: pointer;
@@ -348,7 +348,7 @@ img {
   min-height: 0;
   padding-top: 16px;
   padding-right: 2px;
-  padding-bottom: calc(var(--ee-transport-size) + var(--line) + 22px);
+  padding-bottom: calc(var(--ee-transport-size) + 14px);
   cursor: grab;
   overflow: hidden;
 }
@@ -375,10 +375,11 @@ img {
 .ee-overlay__marquee {
   flex: 1;
   min-width: 0;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: visible;
   display: flex;
   align-items: center;
-  height: var(--line);
+  min-height: var(--line);
   color: var(--text-muted);
   line-height: var(--line);
   white-space: nowrap;
@@ -486,26 +487,29 @@ img {
 }
 
 .ee-overlay--expanded .ee-overlay__footer {
-  left: 0;
-  right: 0;
-  bottom: 0;
-  flex-direction: column;
-  align-items: stretch;
-  gap: 6px;
-  width: 100%;
-  height: auto;
-  padding: 0 12px 10px;
+  left: 12px;
+  right: 12px;
+  bottom: 12px;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+  width: auto;
+  height: var(--ee-transport-size);
+  padding: 0;
   box-sizing: border-box;
 }
 
 .ee-overlay--expanded .ee-overlay__marquee {
-  width: 100%;
-  flex: none;
+  flex: 1;
+  min-width: 0;
+  width: auto;
   max-width: none;
+  padding-bottom: 0;
 }
 
 .ee-overlay--expanded .ee-overlay__transport {
-  align-self: flex-end;
+  align-self: center;
+  flex-shrink: 0;
 }
 
 .ee-overlay__marquee,
@@ -524,7 +528,7 @@ img {
   width: var(--ee-transport-size);
   height: var(--ee-transport-size);
   align-self: center;
-  margin-top: 10px;
+  margin-top: 14px;
 }
 
 .ee-overlay--collapsed .ee-overlay__icon {
@@ -653,8 +657,12 @@ img {
 }
 
 .information__profile p {
-  margin: 0;
+  margin: 0 0 10px;
   line-height: var(--line);
+}
+
+.information__profile p:last-child {
+  margin-bottom: 0;
 }
 
 .information__link {
@@ -664,6 +672,7 @@ img {
 
 .information__link:hover {
   color: var(--active);
+  text-decoration: none;
 }
 
 .information__cv-trigger {
@@ -755,8 +764,16 @@ img {
 .cv-overlay__content {
   flex: 1;
   min-height: 0;
-  margin-top: 20px;
+  margin-top: 24px;
   cursor: grab;
+}
+
+.cv-overlay__sheet {
+  width: 100%;
+  height: 100%;
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 2px;
 }
 
 .cv-overlay__frame {
