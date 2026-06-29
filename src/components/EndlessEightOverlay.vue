@@ -11,9 +11,9 @@ const { tracks, currentIndex, currentTrack, isPlaying, playTrack, togglePlayback
 const MIN_WIDTH = 200
 const MIN_HEIGHT = 200
 const COLLAPSED_WIDTH = TRANSPORT_SIZE
-const COLLAPSED_HEIGHT = TRANSPORT_SIZE + 10 + 22 + 16 + 6
-const EXPANDED_WIDTH = 320
-const EXPANDED_HEIGHT = 420
+const COLLAPSED_HEIGHT = TRANSPORT_SIZE + 10 + 24 + 22 + 8
+const EXPANDED_WIDTH = 360
+const EXPANDED_HEIGHT = 440
 
 const overlayRef = ref(null)
 
