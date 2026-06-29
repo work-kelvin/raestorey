@@ -9,7 +9,7 @@ const cvOpen = ref(false)
 
 <template>
   <section id="information" class="content-section information">
-    <SectionHeader number="00" title="About" type="Information" />
+    <SectionHeader number="00" title="About" :type="site.name" />
 
     <div class="content-section__body prose">
       <p>{{ site.bio }}</p>

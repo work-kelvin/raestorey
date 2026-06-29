@@ -11,7 +11,7 @@ const { tracks, currentIndex, currentTrack, isPlaying, playTrack, togglePlayback
 const MIN_WIDTH = 200
 const MIN_HEIGHT = 200
 const COLLAPSED_WIDTH = TRANSPORT_SIZE
-const COLLAPSED_HEIGHT = TRANSPORT_SIZE + 8 + 16 + 4
+const COLLAPSED_HEIGHT = TRANSPORT_SIZE + 8 + 18 + 10
 const EXPANDED_WIDTH = 320
 const EXPANDED_HEIGHT = 400
 

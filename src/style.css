@@ -82,7 +82,11 @@
 
   --ee-overlay-bottom: 40px;
   --ee-transport-size: 77px;
-  --ee-collapsed-height: calc(var(--ee-transport-size) + 8px + var(--line) + 4px);
+  --ee-marquee-height: 18px;
+  --ee-collapsed-pad-bottom: 10px;
+  --ee-collapsed-height: calc(
+    var(--ee-transport-size) + 8px + var(--ee-marquee-height) + var(--ee-collapsed-pad-bottom)
+  );
 
   --font-title: 'Gangster SN', Georgia, serif;
   --font-header: 'Monument Grotesk', 'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -290,13 +294,14 @@ img {
 }
 
 .ee-overlay--collapsed {
-  padding: 0;
+  padding: 0 0 var(--ee-collapsed-pad-bottom);
+  box-sizing: border-box;
 }
 
 .ee-overlay--expanded {
   display: flex;
   flex-direction: column;
-  padding: 12px 14px 12px;
+  padding: 12px 14px 18px;
   box-sizing: border-box;
 }
 
@@ -348,7 +353,7 @@ img {
   min-height: 0;
   padding-top: 16px;
   padding-right: 2px;
-  padding-bottom: calc(var(--ee-transport-size) + 14px);
+  padding-bottom: calc(var(--ee-transport-size) + 18px);
   cursor: grab;
   overflow: hidden;
 }
@@ -378,10 +383,10 @@ img {
   overflow: hidden;
   display: flex;
   align-items: center;
-  height: var(--line);
+  height: var(--ee-marquee-height);
   color: var(--text-muted);
   font-size: var(--size);
-  line-height: var(--line);
+  line-height: var(--ee-marquee-height);
   white-space: nowrap;
 }
 
@@ -389,7 +394,8 @@ img {
   display: inline-flex;
   align-items: center;
   width: max-content;
-  line-height: var(--line);
+  height: var(--ee-marquee-height);
+  line-height: var(--ee-marquee-height);
   white-space: nowrap;
   animation: ee-marquee 20s linear infinite;
 }
@@ -397,6 +403,8 @@ img {
 .ee-overlay__marquee-text {
   display: inline-block;
   flex-shrink: 0;
+  height: var(--ee-marquee-height);
+  line-height: var(--ee-marquee-height);
   padding-right: 4rem;
   white-space: nowrap;
 }
@@ -489,13 +497,12 @@ img {
 .ee-overlay--expanded .ee-overlay__footer {
   left: 12px;
   right: 12px;
-  bottom: 12px;
+  bottom: 18px;
   flex-direction: row;
   align-items: center;
   gap: 12px;
   width: auto;
-  height: auto;
-  min-height: var(--ee-transport-size);
+  height: var(--ee-transport-size);
   padding: 0;
   box-sizing: border-box;
 }
@@ -505,7 +512,7 @@ img {
   min-width: 0;
   width: auto;
   max-width: none;
-  height: var(--line);
+  height: var(--ee-marquee-height);
   align-self: center;
 }
 
@@ -523,8 +530,8 @@ img {
   flex-direction: column-reverse;
   justify-content: flex-end;
   gap: 8px;
-  height: var(--ee-collapsed-height);
-  padding-bottom: 4px;
+  height: calc(var(--ee-collapsed-height) - var(--ee-collapsed-pad-bottom));
+  padding-bottom: 0;
   box-sizing: border-box;
 }
 
@@ -544,8 +551,8 @@ img {
 .ee-overlay--collapsed .ee-overlay__marquee {
   flex-shrink: 0;
   width: 100%;
-  height: var(--line);
-  padding: 0 4px;
+  height: var(--ee-marquee-height);
+  padding: 0 6px;
 }
 
 .ee-overlay__transport {
