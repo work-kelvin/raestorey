@@ -12,7 +12,7 @@ const MIN_WIDTH = 200
 const MIN_HEIGHT = 200
 const COLLAPSED_WIDTH = TRANSPORT_SIZE
 const COLLAPSED_HEIGHT = TRANSPORT_SIZE + 10 + 26 + 32 + 10
-const EXPANDED_WIDTH = 360
+const EXPANDED_WIDTH = 420
 const EXPANDED_HEIGHT = 440
 
 const overlayRef = ref(null)
@@ -205,7 +205,16 @@ onBeforeUnmount(() => {
       @click.stop="expandOverlay"
       @pointerdown.stop
     >
-      ↗
+      <svg class="ee-overlay__corner-icon" viewBox="0 0 12 12" aria-hidden="true">
+        <path
+          d="M2.5 9.5L9.5 2.5M9.5 2.5H5.5M9.5 2.5V6.5"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.15"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
     </button>
 
     <button
@@ -216,7 +225,16 @@ onBeforeUnmount(() => {
       @click.stop="resetOverlay"
       @pointerdown.stop
     >
-      ↙
+      <svg class="ee-overlay__corner-icon" viewBox="0 0 12 12" aria-hidden="true">
+        <path
+          d="M9.5 2.5L2.5 9.5M2.5 9.5H6.5M2.5 9.5V5.5"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.15"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
     </button>
 
     <div v-if="hasExpanded" class="ee-overlay__content">
